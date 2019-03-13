@@ -1,2 +1,2 @@
 # ChessApp
-Chess App
+[GUI] Chess Application created using Qt Framework.
