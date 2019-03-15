@@ -1,51 +1,37 @@
 #ifndef FIGURE_H
 #define FIGURE_H
 
-#include <cstdint>
-
-/*! @brief White color */
-//#define WHITE 0
-
-/*! @brief Black color */
-//#define BLACK 1
-
-/*! @brief Пешка */
-//#define PAWN 0
-
-/*! @brief Тура */
-//#define ROOK 1
-
-/*! @brief Конь */
-//#define KNIGHT 2
-
-/*! @brief Офицер */
-//#define BISHOP 3
-
-/*! @brief Королева */
-//#define QUEEN 4
-
-/*! @brief Король */
-//#define KING 5
+#include <iostream>
+using namespace std;
 
 /*!
- * Class Figure
+ * \brief Class Figure
  */
 class Figure {
-private:
-  //! color of figure
-  enum color {WHITE, BLACK};
-
-  //! Rang of figure
-  enum rang {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
-
-  //! x coordinate
-  int8_t x;
-
-  //! y coordinate
-  int8_t y;
-
 public:
-  Figure();
+  //! \brief Color of figure
+  enum Color {WHITE, BLACK};
+
+  //! \brief Rang of figure
+  enum Rang {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
+
+  enum X {a=1, b, c, d, e, f, g};
+
+  typedef pair<int, int> Coordinates;
+
+  Figure(Color color, Rang rang);
+  ~Figure();
+  void set(int, int);
+  Coordinates get_coordinates();
+  Color get_color();
+  Rang get_rang();
+
+private:
+  Color color;
+  Rang rang;
+
+  //! \brief Coordinates(x, y)
+  Coordinates coordinates;
 };
 
 #endif // FIGURE_H
