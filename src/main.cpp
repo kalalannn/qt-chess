@@ -1,9 +1,6 @@
 #include "./headers/mainwindow.h"
-#include "../headers/list_figures.h"
 #include "../headers/board.h"
 #include <QApplication>
-
-using namespace std;
 
 int main(int argc, char *argv[]) {
   /*!

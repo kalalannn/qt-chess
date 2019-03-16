@@ -1,44 +1,27 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "list_figures.h"
 #include <iostream>
-
+#include "figure.h"
+#include "cell.h"
 using namespace std;
-
-class Cell {
-public:
-  Cell(int, int, Figure *);
-  ~Cell();
-
-  //! \brief return coordinates
-  pair <int, int> get_coordinates();
-
-  //! \brief return pointer to figure
-  Figure *get_figure();
-
-  //! \brief this->figure = <new_figure> || nullptr
-  void change_figure(Figure *);
-
-private:
-  int x;
-  int y;
-  Figure *figure;
-};
-
+/*!
+ * Board with cells(8*8=64)
+ */
 class Board {
 public:
-  Board();
+  Board(); //! Init function
   ~Board();
-
-  void print_board();
-
-  void start();
+  void create_board();            //! Initialisation of (Cell *)board;
+  void create_figures();          //! Initialisation of white and black arrays
+  void give_figures_on_a_board(); //! Give figures from black and white arrays on a board
+  void print_board();             //! Print the actual state of a board
+  void start();                   //! Start a game
 
 private:
-  Cell *board[8][8];
-
-  Figure *black_list[2][8];
-  Figure *white_list[2][8];
+  Cell *board[8][8];         //! board
+  Figure *black_array[2][8]; //! array of black figures
+  Figure *white_array[2][8]; //! array of white figures
 };
+
 #endif //BOARD_H

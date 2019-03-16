@@ -1,6 +1,5 @@
 #include "../headers/figure.h"
 
-
 Figure::Figure(Color color, Rang rang) {
   this->color = color;
   this->rang = rang;

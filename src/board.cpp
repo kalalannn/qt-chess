@@ -1,37 +1,15 @@
 #include "../headers/board.h"
-#include "../headers/list_figures.h"
-
 #define LINE 8
 
-Cell::Cell(int y, int x, Figure *figure) {
-  this->y = y;
-  this->x = x;
-  this->figure = figure;
-}
-
-pair <int, int> Cell::get_coordinates() {
-  return make_pair(this->x, this->y);
-}
-
-Figure* Cell::get_figure() {
-  return this->figure;
-}
-
-void Cell::change_figure(Figure *figure) {
-  this->figure = figure;
-}
-
-Cell::~Cell() {
-
-}
-
-Board::Board() {
+void Board::create_board() {
   for (int y = 0; y < LINE; y++) {
     for (int x = 0; x < LINE; x++) {
-      board[y][x] = new Cell(y, x, nullptr);
+      this->board[y][x] = new Cell(y, x, nullptr);
     }
   }
+}
 
+void Board::create_figures() {
   Figure::Rang rangs[] = {
     Figure::ROOK,
     Figure::KNIGHT,
@@ -46,10 +24,10 @@ Board::Board() {
   for (int y = 0; y < 2; y++) {
     for (int x = 0; x < LINE; x++) {
       if (y == 0) {
-        this->white_list[y][x] = new Figure(Figure::WHITE, rangs[x]);
+        this->white_array[y][x] = new Figure(Figure::WHITE, rangs[x]);
       }
       else {
-        this->white_list[y][x] = new Figure(Figure::WHITE, Figure::PAWN);
+        this->white_array[y][x] = new Figure(Figure::WHITE, Figure::PAWN);
       }
     }
   }
@@ -57,27 +35,31 @@ Board::Board() {
   for (int y = 0; y < 2; y++) {
     for (int x = 0; x < LINE; x++) {
       if (y == 0) {
-        this->black_list[y][x] = new Figure(Figure::BLACK, rangs[x]);
+        this->black_array[y][x] = new Figure(Figure::BLACK, rangs[x]);
       }
       else {
-        this->black_list[y][x] = new Figure(Figure::BLACK, Figure::PAWN);
+        this->black_array[y][x] = new Figure(Figure::BLACK, Figure::PAWN);
       }
     }
   }
 }
 
-void Board::start() {
-  //! \brief add white figures
+Board::Board() {
+  this->create_board();
+  this->create_figures();
+}
+
+void Board::give_figures_on_a_board() {
+  //! give white figures
   for (int y = 0; y < 2; y++) {
     for (int x = 0; x< LINE; x++) {
-      this->board[y][x]->change_figure(this->white_list[y][x]);
+      this->board[y][x]->change_figure(this->white_array[y][x]);
     }
   }
-
-  //! \brief add black figures
+  //! give black figures
   for (int y = LINE - 1, i = 0; y > 5; y--, i++) {
     for (int x = 0; x < LINE; x++) {
-      this->board[y][x]->change_figure(this->black_list[i][x]);
+      this->board[y][x]->change_figure(this->black_array[i][x]);
     }
   }
 }
@@ -96,6 +78,11 @@ void Board::print_board() {
       }
     }
   }
+}
+
+void Board::start() {
+  give_figures_on_a_board();
+
 
 }
 

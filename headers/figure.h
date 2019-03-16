@@ -1,26 +1,17 @@
 #ifndef FIGURE_H
 #define FIGURE_H
-
-#include <iostream>
-
-
-using namespace std;
-
 /*!
- * \brief Class Figure
+ * Class Figure
  */
 class Figure {
 public:
-  //! \brief Color of figure
-  enum Color {WHITE, BLACK};
-
-  //! \brief Rang of figure
-  enum Rang {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING};
+  enum Color {WHITE, BLACK};                           //! Color of figure
+  enum Rang {PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING}; //! Rang of figure
 
   Figure(Color, Rang);
   ~Figure();
-  Color get_color();
-  Rang get_rang();
+  Color get_color(); //! get color
+  Rang get_rang();   //! get rang
 
 private:
   Color color;

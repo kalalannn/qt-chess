@@ -28,14 +28,14 @@ SOURCES += \
   ./src/main.cpp \
   ./src/mainwindow.cpp \
   ./src/figure.cpp \
-  ./src/list_figures.cpp \
   ./src/board.cpp \
+  ./src/cell.cpp \
 
 HEADERS += \
   ./headers/mainwindow.h \
   ./headers/figure.h \
-  ./headers/list_figures.h \
   ./headers/board.h \
+  ./headers/cell.h \
 
 FORMS += \
   ./forms/mainwindow.ui
