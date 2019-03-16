@@ -16,9 +16,9 @@ public:
   ListFigures(Figure::Color);
   ~ListFigures();
   void print_list();
+  Figure *list_figures[2][8];
 
 private:
-  list <Figure*> list_figures;
 };
 
 #endif //ARRAY_FIGURES_H

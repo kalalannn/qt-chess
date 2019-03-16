@@ -20,9 +20,6 @@
  * \param color
  */
 ListFigures::ListFigures(Figure::Color color) {
-  int x = 0;
-  int y1, y2;
-
   Figure::Rang rangs[] = {
     Figure::ROOK,
     Figure::KNIGHT,
@@ -34,39 +31,20 @@ ListFigures::ListFigures(Figure::Color color) {
     Figure::ROOK
   };
 
-  // white color
-  if (color == Figure::WHITE) {
-    y1 = WHITE_FIGURES_Y;
-    y2 = WHITE_PAWNS_Y;
-  }
-  // black color
-  else {
-    y1 = BLACK_FIGURES_Y;
-    y2 = BLACK_PAWNS_Y;
-  }
-
   // Generate Rangs figures
-  for (Figure::Rang rang: rangs) {
-    this->list_figures.push_back(new Figure(color, rang));
-    x++;
-  }
-  x = 0;
-
-  // Generate PAWNS figures
-  for (; x < FIGURES_COUNT;) {
-    this->list_figures.push_back(new Figure(color, Figure::PAWN));
-    x++;
+  for (int y = 0; y < 2; y++) {
+    for (int x = 0; x < 8; x++) {
+      if (y == 0) {
+        this->list_figures[y][x] = new Figure(color, rangs[x]);
+      }
+      else {
+        this->list_figures[y][x] = new Figure(color, Figure::PAWN);
+      }
+    }
   }
 }
 
 void ListFigures::print_list() {
-  cout << "Full List: " << endl;
-  for (auto figure: this->list_figures) {
-    cout << "============" << endl;
-    cout << "Color: " << figure->get_color() << endl;
-    cout << "Rang: " << figure->get_rang() << endl;
-    cout << "============" << endl;
-  }
 }
 
 /*!

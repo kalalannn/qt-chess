@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
   black_list->print_list();
   */
   Board *b = new Board();
+  b->start();
   b->print_board();
 
 

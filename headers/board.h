@@ -30,9 +30,15 @@ class Board {
 public:
   Board();
   ~Board();
+
   void print_board();
+
+  void start();
 
 private:
   Cell *board[8][8];
+
+  Figure *black_list[2][8];
+  Figure *white_list[2][8];
 };
 #endif //BOARD_H
