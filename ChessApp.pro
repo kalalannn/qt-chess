@@ -29,11 +29,13 @@ SOURCES += \
   ./src/mainwindow.cpp \
   ./src/figure.cpp \
   ./src/list_figures.cpp \
+  ./src/board.cpp \
 
 HEADERS += \
   ./headers/mainwindow.h \
   ./headers/figure.h \
   ./headers/list_figures.h \
+  ./headers/board.h \
 
 FORMS += \
   ./forms/mainwindow.ui
