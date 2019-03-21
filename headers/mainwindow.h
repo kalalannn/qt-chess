@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "../headers/chess_algorithm.h"
+
 namespace Ui {
   class MainWindow;
 }
@@ -16,6 +18,7 @@ public:
 
 private:
   Ui::MainWindow *ui;
+  ChessAlgorithm *alg;
 };
 
 #endif // MAINWINDOW_H

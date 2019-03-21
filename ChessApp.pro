@@ -27,15 +27,15 @@ CONFIG += c++11
 SOURCES += \
   ./src/main.cpp \
   ./src/mainwindow.cpp \
-    src/chess_algorithm.cpp \
-    src/chess_board.cpp \
-    src/chess_view.cpp
+  ./src/chess_algorithm.cpp \
+  ./src/chess_board.cpp \
+  ./src/chess_view.cpp \
 
 HEADERS += \
   ./headers/mainwindow.h \
-    headers/chess_view.h \
-    headers/chess_board.h \
-    headers/chess_algorithm.h
+  ./headers/chess_view.h \
+  ./headers/chess_board.h \
+  ./headers/chess_algorithm.h \
 
 FORMS += \
   ./forms/mainwindow.ui

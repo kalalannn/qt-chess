@@ -7,6 +7,8 @@ ChessApp::ChessApp(QWidget *parent) :
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+  alg = new ChessAlgorithm(this);
+  alg->print();
 }
 
 ChessApp::~ChessApp()

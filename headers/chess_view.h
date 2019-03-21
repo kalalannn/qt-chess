@@ -5,6 +5,7 @@
 
 class ChessView : public QObject {
   Q_OBJECT
+
 public:
 
 private:
