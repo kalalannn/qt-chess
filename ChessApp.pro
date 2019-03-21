@@ -27,15 +27,15 @@ CONFIG += c++11
 SOURCES += \
   ./src/main.cpp \
   ./src/mainwindow.cpp \
-  ./src/figure.cpp \
-  ./src/board.cpp \
-  ./src/cell.cpp \
+    src/chess_algorithm.cpp \
+    src/chess_board.cpp \
+    src/chess_view.cpp
 
 HEADERS += \
   ./headers/mainwindow.h \
-  ./headers/figure.h \
-  ./headers/board.h \
-  ./headers/cell.h \
+    headers/chess_view.h \
+    headers/chess_board.h \
+    headers/chess_algorithm.h
 
 FORMS += \
   ./forms/mainwindow.ui
@@ -44,3 +44,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resource.qrc

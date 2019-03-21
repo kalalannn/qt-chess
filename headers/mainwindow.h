@@ -7,12 +7,12 @@ namespace Ui {
   class MainWindow;
 }
 
-class MainWindow : public QMainWindow {
+class ChessApp: public QMainWindow {
   Q_OBJECT
 
 public:
-  explicit MainWindow(QWidget *parent = nullptr);
-  ~MainWindow();
+  explicit ChessApp(QWidget *parent = nullptr);
+  ~ChessApp();
 
 private:
   Ui::MainWindow *ui;

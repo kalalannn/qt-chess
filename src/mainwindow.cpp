@@ -2,14 +2,14 @@
 #include "./headers/mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+ChessApp::ChessApp(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
 }
 
-MainWindow::~MainWindow()
+ChessApp::~ChessApp()
 {
   delete ui;
 }
