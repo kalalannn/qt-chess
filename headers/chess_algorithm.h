@@ -1,20 +1,24 @@
 #ifndef CHESS_ALGORITHM_H
 #define CHESS_ALGORITHM_H
 
-#include "../headers/chess_board.h"
+#include "chess_board.h"
 
 #include <QObject>
+#include <QPointer>
 
 class ChessAlgorithm  : public QObject {
   Q_OBJECT
 
 public:
   explicit ChessAlgorithm(QObject *parent = nullptr);
-  void createBoard();
-  void print();
+
+  void newGame();
+  QPointer <ChessBoard> board() {return m_board;}
+
+  void test();
 
 private:
-  ChessBoard *board;
+  QPointer <ChessBoard> m_board;
 };
 
 #endif // CHESS_ALGORITHM_H

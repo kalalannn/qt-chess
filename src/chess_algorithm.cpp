@@ -1,14 +1,15 @@
 #include "../headers/chess_algorithm.h"
 
 ChessAlgorithm::ChessAlgorithm(QObject *parent) : QObject (parent){
-  createBoard();
+
 }
 
-void ChessAlgorithm::createBoard() {
-  board = new ChessBoard(this);
+void ChessAlgorithm::newGame() {
+  m_board = new ChessBoard(this);
+  m_board->newBoard();
 }
 
-void ChessAlgorithm::print() {
-  board->test();
+void ChessAlgorithm::test() {
+  m_board->test();
 }
 
