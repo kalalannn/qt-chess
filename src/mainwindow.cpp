@@ -4,10 +4,11 @@
 
 ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
-  alg = new ChessAlgorithm(this);
+	logic = new ChessLogic(this);
   view = new ChessView(this);
-  alg->newGame();
-  view->setBoard(this->alg->board());
+	logic->newGame();
+	view->setBoard(logic->board());
+
   view->board()->print();
 }
 

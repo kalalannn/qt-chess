@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "chess_algorithm.h"
+#include "chess_logic.h"
 #include "chess_view.h"
 
 namespace Ui {
@@ -19,7 +19,7 @@ public:
 
 private:
   Ui::MainWindow *ui;
-  ChessAlgorithm *alg;
+	ChessLogic *logic;
   ChessView *view;
 };
 

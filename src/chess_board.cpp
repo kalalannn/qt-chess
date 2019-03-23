@@ -39,7 +39,7 @@ void ChessBoard::test() {
 void ChessBoard::print() {
   int ind = 0;
   for (QChar x : m_board) {
-    cout << "ind : " << ind << ", x :'" << x.toLatin1() << "'" << endl;
+		std::cout << "ind : " << ind << ", x :'" << x.toLatin1() << "'" << std::endl;
     ind++;
   }
 }
