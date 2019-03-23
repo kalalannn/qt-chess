@@ -74,7 +74,64 @@ void ChessLogic::moveBishop(int from_x, int from_y, int to_x, int to_y) {
 }
 
 void ChessLogic::movePawn(int from_x, int from_y, int to_x, int to_y) {
+	if (abs(to_x - from_x) > 1)
+		return;
 
+	if (abs(to_x - from_x) == 1) {
+		if (currPlayer == whitePlayer && (to_y - from_y) == 1) {
+			m_board->setData(to_x, to_y, 'P');
+			m_board->setData(from_x, from_y, ' ');
+			// еще надо удалить схаванную фигуру из массива
+			return;
+		}
+		else if (currPlayer == blackPlayer && (to_y - from_y) == -1) {
+			m_board->setData(to_x, to_y, 'p');
+			m_board->setData(from_x, from_y, ' ');
+			// еще надо удалить схаванную фигуру из массива
+			return;
+		}
+		else
+			return;
+	}
+
+	if (abs(to_y - from_y) > 2)
+		return;
+
+	if (currPlayer == whitePlayer && (to_y - to_y) == 1) {
+		if (m_board->data(to_x, to_y) == ' ') {
+			m_board->setData(to_x, to_y, 'P');
+			m_board->setData(from_x, from_y, ' ');
+			// еще надо удалить схаванную фигуру из массива
+			return;
+		}
+	}
+	else if (currPlayer == blackPlayer && (to_y - from_y) == -1) {
+		if (m_board->data(to_x, to_y) == ' ') {
+			m_board->setData(to_x, to_y, 'p');
+			m_board->setData(from_x, from_y, ' ');
+			// еще надо удалить схаванную фигуру из массива
+			return;
+		}
+	}
+	else
+		return;
+
+	if (currPlayer == whitePlayer && from_y == 2 & to_y == 4
+			&& m_board->data(from_x, from_y + 1) == ' ' && m_board->data(from_x, from_y + 2) == ' ') {
+		m_board->setData(to_x, to_y, 'P');
+		m_board->setData(from_x, from_y, ' ');
+		// еще надо удалить схаванную фигуру из массива
+		return;
+	}
+	if (currPlayer == blackPlayer && from_y == 7 & to_y == 5
+			&& m_board->data(from_x, from_y - 1) == ' ' && m_board->data(from_x, from_y - 2) == ' ') {
+		m_board->setData(to_x, to_y, 'p');
+		m_board->setData(from_x, from_y, ' ');
+		// еще надо удалить схаванную фигуру из массива
+		return;
+	}
+
+	return;
 }
 
 void ChessLogic::test() {

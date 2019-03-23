@@ -11,6 +11,8 @@ class ChessLogic : public QObject {
 
 public:
 	explicit ChessLogic(QObject *parent = nullptr);
+	enum Player { whitePlayer, blackPlayer };
+	Q_ENUM(Player)
 
 	void newGame();
 	QPointer<ChessBoard> board() { return m_board; }
@@ -28,6 +30,7 @@ public:
 
 private:
 	QPointer<ChessBoard> m_board;
+	Player currPlayer;
 };
 
 #endif // CHESS_LOGIC_H
