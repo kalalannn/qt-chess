@@ -4,27 +4,26 @@ ChessBoard::ChessBoard(QObject *parent) : QObject (parent) {
 }
 
 void ChessBoard::newBoard() {
-  m_board.fill(' ', 64);
+  m_board.fill(QChar::Null, 64);
   int i = 0;
-  for (QChar value : "vjsdksjvpppppppp") {
-    m_board[i] = value;
-    i++;
-    if(i == 16)
+  for (QChar value : "vjsdksjvppppppppPPPPPPPPVJSDKSJV") {
+    m_board[i++] = value;
+    if(i == 16) {
+      i = 48;
+    } else if (i == 64) {
       break;
+    }
   }
-  i = 48;
-  for (QChar value : "PPPPPPPPVJSDKSJV") {
-    m_board[i] = value;
-    i++;
-    if(i == 64)
-      break;
-  }
+}
+
+void ChessBoard::move(int index_from, int index_to) {
+  m_board[index_to] = m_board[index_from];
+  m_board[index_from] = QChar::Null;
 }
 
 void ChessBoard::print() {
   int ind = 0;
   for (QChar x : m_board) {
-		std::cout << "ind : " << ind << ", x :'" << x.toLatin1() << "'" << std::endl;
-    ind++;
+    std::cout << "ind : " << ind++ << ", x :'" << x.toLatin1() << "'" << std::endl;
   }
 }

@@ -8,7 +8,8 @@ void ChessLogic::newGame() {
   m_board->newBoard();
 }
 
-void ChessLogic::move(int from_x, int from_y, int to_x, int to_y, QChar piece) {
+void ChessLogic::move(int from_x, int from_y, int to_x, int to_y) {
+  QChar piece = m_board->piece(ChessBoard::index(from_x, from_y));
   switch (piece.unicode()) {
     case 'k':
       moveKing(from_x, from_y, to_x, to_y);
@@ -26,7 +27,11 @@ void ChessLogic::move(int from_x, int from_y, int to_x, int to_y, QChar piece) {
       moveBishop(from_x, from_y, to_x, to_y);
       break;
     case 'p':
-      movePawn(from_x, from_y, to_x, to_y);
+      //movePawn(from_x, from_y, to_x, to_y);
+      // посмотри вот так
+      // короче завтра вечером расскажу если че не ясно
+      m_board->move(ChessBoard::index(from_x, from_y),
+                    ChessBoard::index(to_x, to_y));
       break;
   }
 }

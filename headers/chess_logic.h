@@ -21,11 +21,10 @@ public:
 	//! Create a new game
 	void newGame();
 
-	//! Get board
-	QPointer<ChessBoard> board() { return m_board; }
+	QPointer <ChessBoard> board() { return m_board; }
 
 	//! Moves
-	void move(int from_x, int from_y, int to_x, int to_y, QChar piece);
+	void move(int from_x, int from_y, int to_x, int to_y);
 	void moveKing(int, int, int, int);
 	void moveQueen(int, int, int, int);
 	void moveRook(int, int, int, int);
