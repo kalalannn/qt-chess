@@ -1,10 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-
+//! .h files
 #include "chess_logic.h"
 #include "chess_view.h"
+
+//! QIncludes
+#include <QMainWindow>
+
+//! C++11 includes
+
 
 namespace Ui {
   class MainWindow;

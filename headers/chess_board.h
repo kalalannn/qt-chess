@@ -1,28 +1,31 @@
 #ifndef CHESS_BOARD_H
 #define CHESS_BOARD_H
 
+//! Constants
 #define SIZE 8
 
+//! QIncludes
 #include <QObject>
 #include <QVector>
+
+//! C++11 includes
 #include <iostream>
 
-//using namespace std;
+//! Chess Board abstraction
 class ChessBoard : public QObject {
   Q_OBJECT
 
 public:
   explicit ChessBoard(QObject *parent = nullptr);
 
+  //! Create a new board and set default figures
   void newBoard();
-	QChar data(int x, int y) { return m_board[y * SIZE + x]; }
-	void setData(int x, int y, QChar value) { m_board[y * SIZE + x] = value; }
-	void removeData(int x, int y) { m_board[y * SIZE + x] = ' '; }	// нах это?
 
-	void test();	// пиши норм тесты, соска!
+  //! Print a state of a board
   void print();
 
 private:
+	//! Board
 	QVector <QChar> m_board;
 };
 

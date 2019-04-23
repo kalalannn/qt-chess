@@ -1,23 +1,30 @@
 #ifndef CHESS_LOGIC_H
 #define CHESS_LOGIC_H
 
+//! .h files
 #include "chess_board.h"
 
+//! QIncludes
 #include <QObject>
 #include <QPointer>
 
+//! C++11 includes
+
+
+//! Chess Logic
 class ChessLogic : public QObject {
   Q_OBJECT
 
 public:
 	explicit ChessLogic(QObject *parent = nullptr);
-	enum Player { whitePlayer, blackPlayer };
-	Q_ENUM(Player)
 
+	//! Create a new game
 	void newGame();
+
+	//! Get board
 	QPointer<ChessBoard> board() { return m_board; }
 
-	// мувим писы
+	//! Moves
 	void move(int from_x, int from_y, int to_x, int to_y, QChar piece);
 	void moveKing(int, int, int, int);
 	void moveQueen(int, int, int, int);
@@ -26,11 +33,9 @@ public:
 	void moveBishop(int, int, int, int);
 	void movePawn(int, int, int, int);
 
-  void test();
-
 private:
+	//! Board
 	QPointer<ChessBoard> m_board;
-	Player currPlayer;
 };
 
 #endif // CHESS_LOGIC_H

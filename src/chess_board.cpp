@@ -21,21 +21,6 @@ void ChessBoard::newBoard() {
   }
 }
 
-void ChessBoard::test() {
-  for (int y = 0; y < SIZE; y++) {
-    for(int x = 0; x < SIZE; x++) {
-      setData(x, y, 'a');
-    }
-  }
-  print();
-  for (int y = 0; y < SIZE; y++) {
-    for(int x = 0; x < SIZE; x++) {
-      removeData(x, y);
-    }
-  }
-  print();
-}
-
 void ChessBoard::print() {
   int ind = 0;
   for (QChar x : m_board) {

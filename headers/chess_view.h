@@ -1,34 +1,35 @@
 #ifndef CHESS_VIEW_H
 #define CHESS_VIEW_H
 
-#include <QObject>
+//! .h files
+#include "chess_board.h"
+
+//! QIncludes
+#include <QWidget>
 #include <QPointer>
 #include <QMap>
 #include <QIcon>
 #include <QMouseEvent>
 
-#include "chess_board.h"
+//! C++11 includes
 
-class ChessView : public QObject {
-	// мы тут обрабатываем MouseEvent
-	// походу должен наследоваться от QWidget..
+
+//! Chess GUI
+class ChessView : public QWidget {
   Q_OBJECT
 
 public:
-	explicit ChessView(QObject *parent = nullptr);
-	QPointer<ChessBoard> board() { return m_board; }
+  explicit ChessView(QWidget *parent = nullptr);
 
-	void setBoard(QPointer<ChessBoard> board) { m_board = board; }
-
-	void mouseEvent(QMouseEvent *event);
-	// If clicked on board returns field coords QPoint, otherwise null QPoint
-	QPoint fieldAt(const QPoint &point);
-
-	// тут ебанешь draw методы
+  //! Set/Get board
+  void setBoard(QPointer<ChessBoard> board) { m_board = board; }
+  QPointer <ChessBoard> board() { return m_board; }
 
 private:
-	QPointer<ChessBoard> m_board;
-	QMap<char, QIcon> pieces;
+  //! Board
+  QPointer <ChessBoard> m_board;
+  //! figures
+  QMap <char, QIcon> pieces;
 };
 
 #endif // CHESS_VIEW_H
