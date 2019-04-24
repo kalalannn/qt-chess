@@ -1,9 +1,10 @@
 #include "../headers/chess_board.h"
 
 ChessBoard::ChessBoard(QObject *parent) : QObject (parent) {
+  this->new_board();
 }
 
-void ChessBoard::newBoard() {
+void ChessBoard::new_board() {
   m_board.fill(QChar::Null, 64);
   int i = 0;
   for (QChar value : "vjsdksjvppppppppPPPPPPPPVJSDKSJV") {

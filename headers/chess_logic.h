@@ -8,27 +8,26 @@
 #include <QObject>
 #include <QPointer>
 
-//! C++11 includes
-
 
 //! Chess Logic
 class ChessLogic : public QObject {
   Q_OBJECT
 
 public:
-	explicit ChessLogic(QObject *parent = nullptr);
+	explicit ChessLogic(QObject *parent = nullptr,
+	                    QPointer <ChessBoard> board = nullptr);
 
-	//! Create a new game
-	void newGame();
+  void set_board(QPointer <ChessBoard> board) { m_board = board ;     }
+  void set_hand(QPoint coordinates)           { m_hand = coordinates; }
 
-	QPointer <ChessBoard> board() { return m_board; }
-
+  QPointer <ChessBoard> board()   { return m_board; }
+  QChar piece(QPoint coordinates) { return m_board->piece(ChessBoard::index(coordinates)); }
+  QPoint hand()                   { return m_hand; }
 
   //---------NOT_IMPLEMENTED-------------//
 
   //-------------PRIOR-------------------//
-  void set_hand(QChar piece); //! default hand == QChar::NULL;
-  QChar hand();               //! заберет и наставит на default
+
 
   bool check_move(QPoint coordinate_to);
 
@@ -37,18 +36,19 @@ public:
   bool player(void);
 
 
-  //----------НЕ_ДЕЛАТЬ__________________//
   int get_piece(QPoint coordinates);
   int put_piece(QPoint coordinates);
 
+  //----------НЕ_ДЕЛАТЬ__________________//
 
 private:
-	//! Board
-	QPointer<ChessBoard> m_board;
+	QPointer <ChessBoard> m_board;
 
-	//! hand
-	QPair <QChar, QPoint> m_hand;
-
+	//! Когда нажмет на поле координаты фигуры
+	//! сохранятся в руку m_hand
+	//! это лучше чем делать QPair <QChar, QPoint>
+	//! QChar легко получим
+	QPoint m_hand;
 
 };
 

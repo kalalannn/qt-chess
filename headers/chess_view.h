@@ -19,10 +19,11 @@ class ChessView : public QWidget {
   Q_OBJECT
 
 public:
-  explicit ChessView(QWidget *parent = nullptr);
+  explicit ChessView(QWidget *parent = nullptr,
+                     QPointer <ChessBoard> board = nullptr);
 
   //! Set/Get board
-  void setBoard(QPointer<ChessBoard> board) { m_board = board; }
+  void set_board(QPointer <ChessBoard> board) { m_board = board; }
   QPointer <ChessBoard> board() { return m_board; }
 
   //---------NOT_IMPLEMENTED-------------//

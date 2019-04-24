@@ -3,13 +3,14 @@
 #include "ui_mainwindow.h"
 
 ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-  ui->setupUi(this);
-	logic = new ChessLogic(this);
-  view = new ChessView(this);
-	logic->newGame();
-	view->setBoard(logic->board());
-  view->board()->print();
 
+  ui->setupUi(this);
+
+  board = new ChessBoard(this);
+  logic = new ChessLogic(this, board);
+  view = new ChessView(this, board);
+
+  board->print();
   logic->get_piece(QPoint(1,1));
   logic->put_piece(QPoint(1,2));
 }

@@ -26,6 +26,7 @@ private:
   Ui::MainWindow *ui;
 	ChessLogic *logic;
   ChessView *view;
+  ChessBoard *board;
 };
 
 #endif // MAINWINDOW_H

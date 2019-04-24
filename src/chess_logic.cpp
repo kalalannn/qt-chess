@@ -1,13 +1,12 @@
 #include "../headers/chess_logic.h"
 
 //------READY
-ChessLogic::ChessLogic(QObject *parent) : QObject (parent) {
+ChessLogic::ChessLogic(QObject *parent,
+                       QPointer <ChessBoard> board) : QObject (parent) {
+  this->set_board(board);
+  this->set_hand(QPoint(-1,-1));
 }
 
-void ChessLogic::newGame() {
-  m_board = new ChessBoard(this);
-  m_board->newBoard();
-}
 
 //------/READY
 
@@ -24,7 +23,13 @@ void ChessLogic::newGame() {
 //!
 bool ChessLogic::check_move(QPoint coordinate_to) {
   Q_UNUSED(coordinate_to);
-  return true;
+
+  //! взять из руки
+  if (this->hand() == QPoint(-1,-1)) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 //! Ход игрока начался
@@ -35,9 +40,10 @@ bool ChessLogic::check_move(QPoint coordinate_to) {
 //! return 0
 //!
 int ChessLogic::get_piece(QPoint coordinates) {
-  QChar piece = m_board->piece(ChessBoard::index(coordinates));
-  m_hand.first = piece;
-  m_hand.second = coordinates;
+
+  //! взять в руку
+  this->set_hand(coordinates);
+
   return 0;
 }
 

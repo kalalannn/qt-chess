@@ -20,12 +20,10 @@ public:
   explicit ChessBoard(QObject *parent = nullptr);
 
   //! Create a new board and set default figures
-  void newBoard();
+  void new_board();
 
   //! Map function for QVector [0-7][0-7]
-  static int index(QPoint coordinates){
-    return (coordinates.y() * SIZE) + coordinates.x();
-  }
+  static int index(QPoint coordinates){ return (coordinates.y() * SIZE) + coordinates.x(); }
 
   //! Get/Move char from index/to index
   QChar piece(int index) { return m_board[index]; }
@@ -37,7 +35,6 @@ public:
   //---------NOT_IMPLEMENTED-------------//
 
 private:
-	//! Board
 	QVector <QChar> m_board;
 };
 
