@@ -1,5 +1,6 @@
 #include "../headers/chess_logic.h"
 
+//------READY
 ChessLogic::ChessLogic(QObject *parent) : QObject (parent) {
 }
 
@@ -8,49 +9,51 @@ void ChessLogic::newGame() {
   m_board->newBoard();
 }
 
-void ChessLogic::move(int from_x, int from_y, int to_x, int to_y) {
-  QChar piece = m_board->piece(ChessBoard::index(from_x, from_y));
+//------/READY
+
+//------NOT_TESTED
+
+//-----/NOT_TESTED
+
+//------PRIOR
+
+//! Возьмет фигуру и вернет вектор поинтов всех возможных ходов
+//! если нет возможных -> пустой вектор
+//! !!!!!! ЭТА ФУНКЦИЯ ПРИОТРИТЕТНАЯ СЕЙЧАС
+QVector <QPoint> ChessLogic::calculate_moves(QChar piece) {
   switch (piece.unicode()) {
-    case 'k':
-      moveKing(from_x, from_y, to_x, to_y);
-      break;
-    case 'q':
-      moveQueen(from_x, from_y, to_x, to_y);
-      break;
-    case 'r':
-      moveRook(from_x, from_y, to_x, to_y);
-      break;
-    case 'n':
-      moveKnight(from_x, from_y, to_x, to_y);
-      break;
-    case 'b':
-      moveBishop(from_x, from_y, to_x, to_y);
-      break;
-    case 'p':
-      //movePawn(from_x, from_y, to_x, to_y);
-      // посмотри вот так
-      // короче завтра вечером расскажу если че не ясно
-      m_board->move(ChessBoard::index(from_x, from_y),
-                    ChessBoard::index(to_x, to_y));
+    default:
       break;
   }
 }
 
-void ChessLogic::moveKing(int from_x, int from_y, int to_x, int to_y) {
-  Q_UNUSED(from_x); Q_UNUSED(from_y); Q_UNUSED(to_x); Q_UNUSED(to_y);
+//-------/PRIOR
+
+//-------НЕ_ДЕЛАТЬ
+
+
+//! Ход игрока начался
+//! Игрок нажал на ЛЮБУЮ клетку
+//!
+//! Kontroly -> calculate_moves
+//! Скопирует фигуру в руку void set_hand() ->
+//! return 0
+//!
+int ChessLogic::get_piece(QPoint coordinates) {
+  QChar piece = m_board->piece(ChessBoard::index(coordinates));
+  switch (piece.unicode()) {
+    case 'k':
+      break;
+    default:
+      break;
+  }
+  return 0;
 }
-void ChessLogic::moveQueen(int from_x, int from_y, int to_x, int to_y) {
-  Q_UNUSED(from_x); Q_UNUSED(from_y); Q_UNUSED(to_x); Q_UNUSED(to_y);
+
+//! Future
+int ChessLogic::put_piece(QPoint coordinates) {
+  Q_UNUSED(coordinates);
+  return 0;
 }
-void ChessLogic::moveRook(int from_x, int from_y, int to_x, int to_y) {
-  Q_UNUSED(from_x); Q_UNUSED(from_y); Q_UNUSED(to_x); Q_UNUSED(to_y);
-}
-void ChessLogic::moveKnight(int from_x, int from_y, int to_x, int to_y) {
-  Q_UNUSED(from_x); Q_UNUSED(from_y); Q_UNUSED(to_x); Q_UNUSED(to_y);
-}
-void ChessLogic::moveBishop(int from_x, int from_y, int to_x, int to_y) {
-  Q_UNUSED(from_x); Q_UNUSED(from_y); Q_UNUSED(to_x); Q_UNUSED(to_y);
-}
-void ChessLogic::movePawn(int from_x, int from_y, int to_x, int to_y) {
-  Q_UNUSED(from_x); Q_UNUSED(from_y); Q_UNUSED(to_x); Q_UNUSED(to_y);
-}
+
+//------/НЕ_ДЕЛАТЬ

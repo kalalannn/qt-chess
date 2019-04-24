@@ -7,6 +7,7 @@
 //! QIncludes
 #include <QObject>
 #include <QVector>
+#include <QPoint>
 
 //! C++11 includes
 #include <iostream>
@@ -22,7 +23,9 @@ public:
   void newBoard();
 
   //! Map function for QVector [0-7][0-7]
-  static int index(int x, int y){ return (y * SIZE) + x; }
+  static int index(QPoint coordinates){
+    return (coordinates.y() * SIZE) + coordinates.x();
+  }
 
   //! Get/Move char from index/to index
   QChar piece(int index) { return m_board[index]; }
@@ -30,6 +33,8 @@ public:
 
   //! Print a state of a board
   void print();
+
+  //---------NOT_IMPLEMENTED-------------//
 
 private:
 	//! Board

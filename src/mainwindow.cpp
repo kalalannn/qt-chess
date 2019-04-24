@@ -8,8 +8,6 @@ ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow
   view = new ChessView(this);
 	logic->newGame();
 	view->setBoard(logic->board());
-
-  logic->move(0,1,0,3);
   view->board()->print();
 }
 

@@ -25,6 +25,8 @@ public:
   void setBoard(QPointer<ChessBoard> board) { m_board = board; }
   QPointer <ChessBoard> board() { return m_board; }
 
+  //---------NOT_IMPLEMENTED-------------//
+
 private:
   //! Board
   QPointer <ChessBoard> m_board;

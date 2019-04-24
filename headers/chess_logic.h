@@ -23,18 +23,33 @@ public:
 
 	QPointer <ChessBoard> board() { return m_board; }
 
-	//! Moves
-	void move(int from_x, int from_y, int to_x, int to_y);
-	void moveKing(int, int, int, int);
-	void moveQueen(int, int, int, int);
-	void moveRook(int, int, int, int);
-	void moveKnight(int, int, int, int);
-	void moveBishop(int, int, int, int);
-	void movePawn(int, int, int, int);
+
+  //---------NOT_IMPLEMENTED-------------//
+
+  //-------------PRIOR-------------------//
+  void set_hand(QChar piece); //! default hand == QChar::NULL;
+  QChar hand();               //! заберет и наставит на default
+
+  QVector <QPoint> calculate_moves(QChar piece);
+
+  //! POZOR для playera придумать какую нибудь легкую структуру EX: bool
+  void change_player(void);
+  bool player(void);
+
+
+  //----------НЕ_ДЕЛАТЬ__________________//
+  int get_piece(QPoint coordinates);
+  int put_piece(QPoint coordinates);
+
 
 private:
 	//! Board
 	QPointer<ChessBoard> m_board;
+
+	//! hand
+	QChar m_hand;
+
+
 };
 
 #endif // CHESS_LOGIC_H
