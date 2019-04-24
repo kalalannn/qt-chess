@@ -30,7 +30,7 @@ public:
   void set_hand(QChar piece); //! default hand == QChar::NULL;
   QChar hand();               //! заберет и наставит на default
 
-  QVector <QPoint> calculate_moves(QChar piece);
+  bool check_move(QPoint coordinate_to);
 
   //! POZOR для playera придумать какую нибудь легкую структуру EX: bool
   void change_player(void);
@@ -47,7 +47,7 @@ private:
 	QPointer<ChessBoard> m_board;
 
 	//! hand
-	QChar m_hand;
+	QPair <QChar, QPoint> m_hand;
 
 
 };

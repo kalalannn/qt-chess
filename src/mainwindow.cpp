@@ -9,6 +9,9 @@ ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow
 	logic->newGame();
 	view->setBoard(logic->board());
   view->board()->print();
+
+  logic->get_piece(QPoint(1,1));
+  logic->put_piece(QPoint(1,2));
 }
 
 ChessApp::~ChessApp()

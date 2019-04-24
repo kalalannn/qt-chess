@@ -17,20 +17,15 @@ void ChessLogic::newGame() {
 
 //------PRIOR
 
-//! Возьмет фигуру и вернет вектор поинтов всех возможных ходов
-//! если нет возможных -> пустой вектор
+//! Возьмет фигуру из руки и вернет
+//! true если может ходить на coordinate_to
+//! false если не может
 //! !!!!!! ЭТА ФУНКЦИЯ ПРИОТРИТЕТНАЯ СЕЙЧАС
-QVector <QPoint> ChessLogic::calculate_moves(QChar piece) {
-  switch (piece.unicode()) {
-    default:
-      break;
-  }
+//!
+bool ChessLogic::check_move(QPoint coordinate_to) {
+  Q_UNUSED(coordinate_to);
+  return true;
 }
-
-//-------/PRIOR
-
-//-------НЕ_ДЕЛАТЬ
-
 
 //! Ход игрока начался
 //! Игрок нажал на ЛЮБУЮ клетку
@@ -41,19 +36,22 @@ QVector <QPoint> ChessLogic::calculate_moves(QChar piece) {
 //!
 int ChessLogic::get_piece(QPoint coordinates) {
   QChar piece = m_board->piece(ChessBoard::index(coordinates));
-  switch (piece.unicode()) {
-    case 'k':
-      break;
-    default:
-      break;
-  }
+  m_hand.first = piece;
+  m_hand.second = coordinates;
   return 0;
 }
 
-//! Future
+//! проверит coordinates (можно ли ходить)
+//! и походит
 int ChessLogic::put_piece(QPoint coordinates) {
-  Q_UNUSED(coordinates);
+  if (this->check_move(coordinates)) {
+    std::cout << "moved" << std::endl;
+  }
+
   return 0;
 }
 
+//------/PRIOR
+
+//------НЕ_ДЕЛАТЬ
 //------/НЕ_ДЕЛАТЬ
