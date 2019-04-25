@@ -24,22 +24,38 @@ public:
   QChar piece(QPoint coordinates) { return m_board->piece(ChessBoard::index(coordinates)); }
   QPoint hand()                   { return m_hand; }
 
+
   //---------NOT_IMPLEMENTED-------------//
 
   //-------------PRIOR-------------------//
-
-
-  bool check_move(QPoint coordinate_to);
 
   //! POZOR для playera придумать какую нибудь легкую структуру EX: bool
   void change_player(void);
   bool player(void);
 
+  // cpp описание
+  bool check_cell(QPoint coordinate);
 
+  //! возьмет из руки фигуру и
+  //! чекнет все клетки до заданной позиции
+  //! по диагонали (Офицер, королева, пешка, король)
+  int check_diagonal(QPoint coordinate_to);
+
+  //! Буквой Г (Kонь)
+  int check_g(QPoint coordinate_to);
+
+  //! По вертикали или по горизонтали
+  //! (Kороль, тура, kоролева)
+  int check_straight(QPoint coordinate_to);
+
+  bool check_move(QPoint coordinate_to);
+
+
+
+  //----------НЕ_ДЕЛАТЬ__________________//
   int get_piece(QPoint coordinates);
   int put_piece(QPoint coordinates);
 
-  //----------НЕ_ДЕЛАТЬ__________________//
 
 private:
 	QPointer <ChessBoard> m_board;
