@@ -19,6 +19,9 @@ class ChessBoard : public QObject {
 public:
   explicit ChessBoard(QObject *parent = nullptr);
 
+  //! Getter
+  QVector<QChar> board() { return m_board; }
+
   //! Create a new board and set default figures
   void new_board();
 

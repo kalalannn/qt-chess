@@ -1,2 +1,4 @@
 ChessApp.pro.user
+tests/tests.pro.user
 build/
+build-tests/
