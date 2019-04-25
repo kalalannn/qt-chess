@@ -1,4 +1,4 @@
-#include "../headers/chess_view.h"
+#include "chess_view.h"
 
 ChessView::ChessView(QWidget *parent,
                      QPointer <ChessBoard> board) : QWidget (parent) {

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,25 +25,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-  ./src/main.cpp \
-  ./src/mainwindow.cpp \
-  ./src/chess_logic.cpp \
-  ./src/chess_board.cpp \
-  ./src/chess_view.cpp \
+  main.cpp \
+  mainwindow.cpp \
+  chess_logic.cpp \
+  chess_board.cpp \
+  chess_view.cpp \
 
 HEADERS += \
-  ./headers/mainwindow.h \
-  ./headers/chess_view.h \
-  ./headers/chess_board.h \
-  ./headers/chess_logic.h \
+  mainwindow.h \
+  chess_view.h \
+  chess_board.h \
+  chess_logic.h \
 
 FORMS += \
-  ./forms/mainwindow.ui
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+  mainwindow.ui
 
 RESOURCES += \
     resource.qrc

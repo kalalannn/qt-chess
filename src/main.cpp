@@ -1,5 +1,5 @@
-#include "./headers/mainwindow.h"
-#include "../headers/chess_logic.h"
+#include "mainwindow.h"
+#include "chess_logic.h"
 
 #include <QApplication>
 

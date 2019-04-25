@@ -1,4 +1,4 @@
-#include "../headers/chess_logic.h"
+#include "chess_logic.h"
 
 //------READY
 ChessLogic::ChessLogic(QObject *parent,

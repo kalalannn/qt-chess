@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./headers/mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
