@@ -1,14 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-//! .h files
+#include "chess_board.h"
 #include "chess_logic.h"
 #include "chess_view.h"
 
 //! QIncludes
 #include <QMainWindow>
-
-//! C++11 includes
 
 
 namespace Ui {
@@ -24,9 +22,9 @@ public:
 
 private:
   Ui::MainWindow *ui;
-	ChessLogic *logic;
-  ChessView *view;
-  ChessBoard *board;
+  ChessLogic     *logic;
+  ChessView      *view;
+  ChessBoard     *board;
 };
 
 #endif // MAINWINDOW_H

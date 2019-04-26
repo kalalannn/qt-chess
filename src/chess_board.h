@@ -3,7 +3,6 @@
 
 //! Constants
 #define SIZE 8
-
 #define ROOK 'v'
 #define KNIGHT 'j'
 #define OFFICER 's'
@@ -16,7 +15,6 @@
 #include <QVector>
 #include <QPoint>
 
-//! C++11 includes
 #include <iostream>
 
 //! Chess Board abstraction

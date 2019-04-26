@@ -1,15 +1,11 @@
 #include "chess_logic.h"
 
-//------READY
 ChessLogic::ChessLogic(QObject *parent,
                        QPointer <ChessBoard> board) : QObject (parent) {
   this->set_board(board);
   this->set_hand(QPoint(-1,-1));
   this->set_player(WHITE);
 }
-//------/READY
-
-//------DEVEL
 
 bool ChessLogic::test_direction_offset(QPair <int,QPoint> direction_offset, QPoint to) {
   QString direction;
@@ -29,6 +25,8 @@ bool ChessLogic::test_direction_offset(QPair <int,QPoint> direction_offset, QPoi
   }
   return true;
 }
+
+//------DEVEL
 
 //! проверит может ли фигура из руки ходить на клетку
 bool ChessLogic::move(QPoint to) {
@@ -115,9 +113,9 @@ bool ChessLogic::put_piece(QPoint to) {
   } else {
     std::cout << "NOT! moved" << std::endl;
   }
+  this->set_hand(QPoint(-1,-1));
   return true;
 }
-
 
 //! проверит клетку (для всеx кроме коня)
 bool ChessLogic::check_cell(QPoint coordinate) {

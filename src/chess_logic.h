@@ -1,12 +1,12 @@
 #ifndef CHESS_LOGIC_H
 #define CHESS_LOGIC_H
 
-//! .h files
 #include "chess_board.h"
 
 //! QIncludes
-#include <QObject>
 #include <QPointer>
+#include <QPair>
+#include <QChar>
 
 #define WHITE true
 #define BLACK false
@@ -33,7 +33,7 @@ public:
   QPointer <ChessBoard> board()   { return m_board; }
   QChar piece(QPoint coordinates) { return m_board->piece(ChessBoard::index(coordinates)); }
   QPoint hand()                   { return m_hand; }
-  bool player() { return m_player; }
+  bool player()                   { return m_player; }
 
   void change_player() { m_player = not m_player; }
 
@@ -57,8 +57,8 @@ public:
 
 private:
 	QPointer <ChessBoard> m_board;
-	bool m_player;
 	QPoint m_hand;
+	bool m_player;
 };
 
 #endif // CHESS_LOGIC_H

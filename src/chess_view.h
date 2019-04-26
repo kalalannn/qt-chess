@@ -1,7 +1,6 @@
 #ifndef CHESS_VIEW_H
 #define CHESS_VIEW_H
 
-//! .h files
 #include "chess_board.h"
 
 //! QIncludes
