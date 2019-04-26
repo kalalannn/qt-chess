@@ -5,106 +5,122 @@ ChessLogic::ChessLogic(QObject *parent,
                        QPointer <ChessBoard> board) : QObject (parent) {
   this->set_board(board);
   this->set_hand(QPoint(-1,-1));
+  this->set_player(WHITE);
 }
-
-
 //------/READY
 
-//------NOT_TESTED
+//------DEVEL
 
-//-----/NOT_TESTED
-
-//------PRIOR
-
-//! проверит может ли фигура(кроме коня) походить на клетку
-bool ChessLogic::check_cell(QPoint coordinate) {
-  QChar piece = this->piece(coordinate);
-  if (piece == QChar::Null) {
-    // тут еще надо будет дописать
-    // условия типо король под боем или
-    // еще какие исключения
-
-    return true;
-
-  } else if (piece == 'P') {  // в скобках любой апперкейс
-    // вот тут и ниже надо делать проверки юзера
-    // акутуального
-
-  } else if (piece == 'p') { // в скобках любой лоукейс
-
+bool ChessLogic::test_direction_offset(QPair <int,QPoint> direction_offset, QPoint to) {
+  QString direction;
+  switch (direction_offset.first) {
+    case STRAIGHT: direction = "straight"; break;
+    case DIAGONAL: direction = "diagonal"; break;
+    case G:        direction = "g";        break;
+    default:       direction = "false";    break;
   }
-  return true;
-}
-
-//! вот тут и в подобных функциях check_diag check_g
-//! в цикле проходит все клетки от this->hand() до
-//! coordinate_to при этом вызывая check_cell
-//! это основная наша задача сейчас
-//! эти функции проверяют возможность хода
-//! и будут потом воланы
-//!
-int ChessLogic::check_straight(QPoint coordinate_to) {
-  return 0;
-}
-
-int ChessLogic::check_diagonal(QPoint coordinate_to) {
-  return 0;
-}
-
-int ChessLogic::check_g(QPoint coordinate_to) {
-  return 0;
-}
-
-//! Возьмет фигуру из руки и вернет
-//! true если может ходить на coordinate_to
-//! false если не может
-//! !!!!!!
-//!
-bool ChessLogic::check_move(QPoint coordinate_to) {
-  Q_UNUSED(coordinate_to);
-
-  QPoint coordinate_from = this->hand();
-  if (coordinate_from == QPoint(-1,-1)) {
+  std::cout << "from (x,y): " << this->hand(). x() << ", " << this->hand().y() << std::endl;
+  std::cout << "to (x,y): " << to.x() << ", " << to.y() << std::endl;
+  std::cout << "direction : " << direction.toStdString() << std::endl;
+  std::cout << "offset_x : " << direction_offset.second.x() << std::endl;
+  std::cout << "offset_y : " << direction_offset.second.y() << std::endl;
+  if (direction == "false") {
     return false;
   }
-  QChar piece = this->piece(coordinate_from);
-
-  switch(piece.unicode()) {
-    case 'p':
-      break;
-
-  }
-
   return true;
 }
 
-//------/PRIOR
-
-//------НЕ_ДЕЛАТЬ
-
-//! Ход игрока начался
-//! Игрок нажал на ЛЮБУЮ клетку
-//!
-//! Kontroly -> calculate_moves
-//! Скопирует фигуру в руку void set_hand() ->
-//! return 0
-//!
-int ChessLogic::get_piece(QPoint coordinates) {
-
-  //! взять в руку
-  this->set_hand(coordinates);
-
-  return 0;
+//! проверит может ли фигура из руки ходить на клетку
+bool ChessLogic::move(QPoint to) {
+  QPair <int, QPoint> direction_offset = this->get_direction_offset(to);
+  return this->test_direction_offset(direction_offset, to);
+  //return true;
 }
 
-//! проверит coordinates (можно ли ходить)
-//! и походит
-int ChessLogic::put_piece(QPoint coordinates) {
-  if (this->check_move(coordinates)) {
-    std::cout << "moved" << std::endl;
+//! вернет направление и оффсет(куда сколько ходить)
+QPair <int, QPoint> ChessLogic::get_direction_offset(QPoint to) {
+  int direction = BAD_DIRECTION; //! default
+  int offset_x = to.x() - this->hand().x();
+  int offset_y = to.y() - this->hand().y();
+
+  if (offset_x == 0 or offset_y == 0) {
+    direction = STRAIGHT;
+  } else if (abs(offset_x) == abs(offset_y)) {
+    direction = DIAGONAL;
+  } else if ((abs(offset_x) == 2 and abs(offset_y) == 1) or
+             (abs(offset_x) == 1 and abs(offset_y) == 2)) {
+    direction = G;
+  }
+  return QPair <int, QPoint> (direction, QPoint(offset_x, offset_y));
+}
+
+/*
+bool ChessLogic::move_to_direction(int direction) {
+  QChar piece = this->piece(this->hand()).toLower();
+  switch (direction) {
+    case STRAIGHT:
+      switch (piece.unicode()) {
+        case QUEEN:
+        case ROOK:
+          return true;
+        case PAWN:
+        case KING:
+          return true;
+        default:
+          return false;
+      }
+    case DIAGONAL:
+      switch (piece.unicode()) {
+        case QUEEN:
+        case OFFICER:
+          return true;
+        case KING:
+        case PAWN:
+          return true;
+        default:
+          return false;
+      }
+    case G:
+      switch (piece.unicode()) {
+        case KNIGHT:
+          return true;
+        default:
+          return false;
+      }
+    default:
+      return false;
+  }
+}
+*/
+
+
+//! взять piece в руку
+bool ChessLogic::get_piece(QPoint coordinate) {
+  if (this->player() == WHITE and
+      this->piece(coordinate).isLower()) {
+  } else if (this->player() == BLACK and
+             this->piece(coordinate).isUpper()) {
+  } else {
+    return false;
   }
 
-  return 0;
+  this->set_hand(coordinate);
+  return true;
 }
 
-//------/НЕ_ДЕЛАТЬ
+//! походить piecom из руки
+bool ChessLogic::put_piece(QPoint to) {
+  if (this->move(to)) {
+    std::cout << "moved" << std::endl;
+  } else {
+    std::cout << "NOT! moved" << std::endl;
+  }
+  return true;
+}
+
+
+//! проверит клетку (для всеx кроме коня)
+bool ChessLogic::check_cell(QPoint coordinate) {
+  Q_UNUSED(coordinate);
+  return true;
+}

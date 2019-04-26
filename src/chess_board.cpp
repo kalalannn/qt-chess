@@ -1,5 +1,6 @@
 #include "chess_board.h"
 
+
 ChessBoard::ChessBoard(QObject *parent) : QObject (parent) {
   this->new_board();
 }

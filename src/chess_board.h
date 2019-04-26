@@ -4,6 +4,13 @@
 //! Constants
 #define SIZE 8
 
+#define ROOK 'v'
+#define KNIGHT 'j'
+#define OFFICER 's'
+#define QUEEN 'd'
+#define KING 'k'
+#define PAWN 'p'
+
 //! QIncludes
 #include <QObject>
 #include <QVector>
