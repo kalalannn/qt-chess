@@ -49,6 +49,7 @@ public:
   bool check_moving_rules(QPoint offset, QChar piece);
 
   bool check_cell(QPoint coordinate);
+  bool check_final_cell(QPoint to);
 
   bool check_figure_direction(int direction);
 

@@ -74,10 +74,12 @@ bool ChessLogic::put_piece(QPoint to) {
   bool res = false;
 
   if (not this->check_moving_rules(offset, piece.toLower())) { return false; }
-  if (piece.toLower() != KNIGHT) {
+  if (piece.toLower() != KNIGHT and piece.toLower() != PAWN) {
     if (offset.x() == 0) { // STRAIGHT
       for (int inc = 1; inc != abs(offset.y()) + 1; inc++) {
-        if (offset.y() < 0) {
+        if (inc == abs(offset.y())) {
+          res = check_final_cell(to);
+        } else if (offset.y() < 0) {
           res = check_cell(QPoint(from.x(), from.y() - inc));
         } else {
           res = check_cell(QPoint(from.x(), from.y() + inc));
@@ -86,7 +88,9 @@ bool ChessLogic::put_piece(QPoint to) {
       }
     } else if (offset.y() == 0) {
       for (int inc = 1; inc != abs(offset.x()) + 1; inc++) {
-        if (offset.x() < 0) {
+        if (inc == abs(offset.x())) {
+          res = check_final_cell(to);
+        } else if (offset.x() < 0) {
           res = check_cell(QPoint(from.x() - inc, from.y()));
         } else {
           res = check_cell(QPoint(from.x() + inc , from.y()));
@@ -95,7 +99,9 @@ bool ChessLogic::put_piece(QPoint to) {
       }
     } else { // DIAGONAL
       for (int inc = 1; inc != abs(offset.x()) + 1; inc++) {
-        if (offset.x() < 0 and offset.y() < 0) {
+        if (inc == abs(offset.x())) {
+          res = check_final_cell(to);
+        } else if (offset.x() < 0 and offset.y() < 0) {
           res = check_cell(QPoint(from.x() - inc, from.y() - inc));
         } else if (offset.x() > 0 and offset.y() > 0){
           res = check_cell(QPoint(from.x() + inc , from.y() + inc));
@@ -107,8 +113,30 @@ bool ChessLogic::put_piece(QPoint to) {
         if (not res) { return res; }
       }
     }
-  } else {
-    if (check_cell(to) == false) { return false; } // KNIGHT
+  } else if (piece.toLower() == KNIGHT) {
+    if (check_final_cell(to) == false) { return false; } // KNIGHT
+  } else if (piece.toLower() == PAWN) {
+    if (piece.isLower()) { //white
+      if (offset.y() < 0) { return false; }
+    } else { // Black
+      if (offset.y() > 0) { return false; }
+    }
+
+    if (abs(offset.x()) == abs(offset.y())) { //diag
+      if (this->player() == WHITE) {
+        if (this->piece(to).isUpper()) { }
+        else  { return false; }
+      } else if (this->player() == BLACK) {
+        if (this->piece(to).isLower()) { }
+        else { return false; }
+      }
+    } else if (offset.y() == -2) { // black
+      if (not check_cell(QPoint(from.x(), from.y() - 1))) { return false; }
+      if (not check_cell(to)) { return false; }
+    } else if (offset.y() == 2) {
+      if (not check_cell(QPoint(from.x(), from.y() + 1))) { return false; }
+      if (not check_cell(to)) { return false; }
+    }
   }
   this->board()->move(ChessBoard::index(from), ChessBoard::index(to));
   this->change_player();
@@ -118,7 +146,16 @@ bool ChessLogic::put_piece(QPoint to) {
 
 //! проверит клетку (для всеx кроме коня)
 bool ChessLogic::check_cell(QPoint coordinate) {
-  std::cout << "Checking cell: " << coordinate.x() << ", " << coordinate.y() << std::endl;
+  if (this->piece(coordinate) == QChar::Null) {  }
+  else { return false; }
+  return true;
+}
 
+bool ChessLogic::check_final_cell (QPoint to) {
+  if (this->player() == WHITE and
+      (this->piece(to) == QChar::Null or this->piece(to).isUpper())) { }
+  else if (this->player() == BLACK and
+      (this->piece(to) == QChar::Null or this->piece(to).isLower())) { }
+  else  { return false; }
   return true;
 }
