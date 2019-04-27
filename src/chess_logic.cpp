@@ -68,14 +68,13 @@ bool ChessLogic::get_piece(QPoint from) {
 //! походить piecom из руки
 bool ChessLogic::put_piece(QPoint to) {
   QPoint from = this->hand();
-  if (from == QPoint(-1,-1)) { return false; }
 
   QChar piece = this->piece(from);
   QPoint offset = QPoint(to.x() - from.x(), to.y() - from.y());
 
   if (not this->check_moving_rules(offset, piece.toLower())) { return false; }
   this->board()->move(ChessBoard::index(from), ChessBoard::index(to));
-  this->set_hand(QPoint(-1,-1));
+  this->change_player();
 
   return true;
 }

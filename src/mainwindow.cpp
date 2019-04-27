@@ -39,18 +39,17 @@ ChessApp::~ChessApp()
 }
 
 void ChessApp::viewClicked(const QPoint &field) {
-  std::cout << field.x() << "," << field.y() << std::endl;
-  if (view->highlightCount() != 0) {
+  if (logic->hand() == QPoint(-1,-1)) {
+    if (logic->get_piece(field)) {
+      m_selectedField = new ChessView::FieldHighlight(
+                  field.x(), field.y(), QColor(0, 30, 255, 50));
+      view->addHighlight(m_selectedField);
+    }
+  } else {
+    logic->put_piece(field);
     view->removeHighlight(m_selectedField);
     delete m_selectedField;
-    m_selectedField = 0;
+    m_selectedField = nullptr;
+    logic->set_hand(QPoint(-1,-1));
   }
-  m_selectedField = new ChessView::FieldHighlight(
-              field.x(), field.y(), QColor(0, 0, 255, 50)
-              );
-  view->addHighlight(m_selectedField);
-
-
-  /*
-  */
 }
