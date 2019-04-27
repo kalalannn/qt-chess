@@ -10,6 +10,9 @@ ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow
   logic = new ChessLogic(this, board);
   view = new ChessView(this, board);
 
+  connect(view, &ChessView::clicked,
+          this, &ChessApp::viewClicked);
+
   view->setPiece('P', QIcon(":/pieces/Chess_plt45.svg")); // pawn
   view->setPiece('K', QIcon(":/pieces/Chess_klt45.svg")); // king
   view->setPiece('D', QIcon(":/pieces/Chess_qlt45.svg")); // queen
@@ -33,4 +36,7 @@ ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow
 ChessApp::~ChessApp()
 {
   delete ui;
+}
+void ChessApp::viewClicked(const QPoint &field) {
+  std::cout << field.x() << "," << field.y() << std::endl;
 }

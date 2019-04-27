@@ -84,3 +84,22 @@ void ChessView::drawPiece(QPainter *painter, int column, int rank) {
         }
     }
 }
+
+QPoint ChessView::fieldAt(const QPoint &pt) const {
+    if(!m_board) return QPoint();
+    const QSize fs = fieldSize();
+    int offset = fontMetrics().width('M'); // 'M' is the widest letter
+    if(pt.x() < offset) return QPoint(-1,-1);
+    int c = (pt.x()-offset) / fs.width();
+    int r = pt.y()/fs.height();
+    if(c < 0 || c >= SIZE || r < 0 || r >= SIZE)
+        return QPoint(-1,-1);
+
+    return QPoint(c, SIZE - r - 1); // max rank - r
+}
+
+void ChessView::mouseReleaseEvent(QMouseEvent *event) {
+    QPoint pt = fieldAt(event->pos());
+    if(pt == QPoint(-1,-1)) { return; }
+    emit clicked(pt);
+}

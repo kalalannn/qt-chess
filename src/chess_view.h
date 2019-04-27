@@ -31,6 +31,12 @@ public:
   QSize sizeHint() const;
   QRect fieldRect(int column, int rank) const;
 
+  QPoint fieldAt(const QPoint &pt) const;
+  void mouseReleaseEvent(QMouseEvent *event);
+
+signals:
+  void clicked(const QPoint &);
+
 
 protected:
   void paintEvent(QPaintEvent *event);

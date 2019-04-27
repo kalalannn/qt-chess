@@ -20,6 +20,9 @@ public:
   explicit ChessApp(QWidget *parent = nullptr);
   ~ChessApp();
 
+public slots:
+    void viewClicked(const QPoint &field);
+
 private:
   Ui::MainWindow *ui;
   ChessLogic     *logic;
