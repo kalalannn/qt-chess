@@ -68,11 +68,48 @@ bool ChessLogic::get_piece(QPoint from) {
 //! походить piecom из руки
 bool ChessLogic::put_piece(QPoint to) {
   QPoint from = this->hand();
-
+  if (from == to) { return false; }
   QChar piece = this->piece(from);
   QPoint offset = QPoint(to.x() - from.x(), to.y() - from.y());
+  bool res = false;
 
   if (not this->check_moving_rules(offset, piece.toLower())) { return false; }
+  if (piece.toLower() != KNIGHT) {
+    if (offset.x() == 0) { // STRAIGHT
+      for (int inc = 1; inc != abs(offset.y()) + 1; inc++) {
+        if (offset.y() < 0) {
+          res = check_cell(QPoint(from.x(), from.y() - inc));
+        } else {
+          res = check_cell(QPoint(from.x(), from.y() + inc));
+        }
+        if (not res) { return res; }
+      }
+    } else if (offset.y() == 0) {
+      for (int inc = 1; inc != abs(offset.x()) + 1; inc++) {
+        if (offset.x() < 0) {
+          res = check_cell(QPoint(from.x() - inc, from.y()));
+        } else {
+          res = check_cell(QPoint(from.x() + inc , from.y()));
+        }
+        if (not res) { return res; }
+      }
+    } else { // DIAGONAL
+      for (int inc = 1; inc != abs(offset.x()) + 1; inc++) {
+        if (offset.x() < 0 and offset.y() < 0) {
+          res = check_cell(QPoint(from.x() - inc, from.y() - inc));
+        } else if (offset.x() > 0 and offset.y() > 0){
+          res = check_cell(QPoint(from.x() + inc , from.y() + inc));
+        } else if (offset.x() > 0 and offset.y() < 0) {
+          res = check_cell(QPoint(from.x() + inc , from.y() - inc));
+        } else if (offset.x() < 0 and offset.y() > 0) {
+          res = check_cell(QPoint(from.x() - inc , from.y() + inc));
+        }
+        if (not res) { return res; }
+      }
+    }
+  } else {
+    if (check_cell(to) == false) { return false; } // KNIGHT
+  }
   this->board()->move(ChessBoard::index(from), ChessBoard::index(to));
   this->change_player();
 
@@ -81,6 +118,7 @@ bool ChessLogic::put_piece(QPoint to) {
 
 //! проверит клетку (для всеx кроме коня)
 bool ChessLogic::check_cell(QPoint coordinate) {
-  Q_UNUSED(coordinate);
+  std::cout << "Checking cell: " << coordinate.x() << ", " << coordinate.y() << std::endl;
+
   return true;
 }
