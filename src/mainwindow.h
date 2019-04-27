@@ -28,6 +28,7 @@ private:
   ChessLogic     *logic;
   ChessView      *view;
   ChessBoard     *board;
+  ChessView::FieldHighlight *m_selectedField;
 };
 
 #endif // MAINWINDOW_H

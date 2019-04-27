@@ -24,6 +24,16 @@ QRect ChessView::fieldRect(int column, int rank) const {
     return fRect.translated(offset, 0);
 }
 
+void ChessView::drawHighlights(QPainter *painter) {
+  for(int idx=0; idx < highlightCount(); ++idx) {
+    Highlight *hl = highlight(idx);
+    if(hl->type() == FieldHighlight::Type) {
+      FieldHighlight *fhl = static_cast<FieldHighlight*>(hl);
+      QRect rect = fieldRect(fhl->column(), fhl->rank());
+      painter->fillRect(rect, fhl->color());
+    }
+  }
+}
 void ChessView::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     for(int r = SIZE -1 ; r >= 0; --r) {
@@ -43,6 +53,7 @@ void ChessView::paintEvent(QPaintEvent *event) {
             painter.restore();
         }
     }
+    drawHighlights(&painter);
     for(int r = SIZE - 1 ; r >= 0 ; --r) {
         for(int c = 0; c < SIZE ; ++c) {
             drawPiece(&painter, c, r);

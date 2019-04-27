@@ -37,6 +37,20 @@ ChessApp::~ChessApp()
 {
   delete ui;
 }
+
 void ChessApp::viewClicked(const QPoint &field) {
   std::cout << field.x() << "," << field.y() << std::endl;
+  if (view->highlightCount() != 0) {
+    view->removeHighlight(m_selectedField);
+    delete m_selectedField;
+    m_selectedField = 0;
+  }
+  m_selectedField = new ChessView::FieldHighlight(
+              field.x(), field.y(), QColor(0, 0, 255, 50)
+              );
+  view->addHighlight(m_selectedField);
+
+
+  /*
+  */
 }
