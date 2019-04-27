@@ -1,58 +1,33 @@
 #include <iostream>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
-/* Y
- * ^
- * |
- * 7 |R|J|O|Q|K|O|J|R|
- * 6 |P|P|P|P|P|P|P|P|
- * 5 | | | | | | | | |
- * 4 | | | | | | | | |
- * 3 | | | | | | | | |
- * 2 | | | | | | | | |
- * 1 |p|p|p|p|p|p|p|p|
- * 0 |r|j|o|q|k|o|j|r|
- *    0 1 2 3 4 5 6 7 -> X
- */
+#include <QLayout>
 
 ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
-  //ui->setupUi(this);
-
+  ui->setupUi(this);
   board = new ChessBoard(this);
   logic = new ChessLogic(this, board);
   view = new ChessView(this, board);
 
-  logic->get_piece(QPoint(0,0)); //тура 0 +
-  logic->put_piece(QPoint(0,7));
+  view->setPiece('P', QIcon(":/pieces/Chess_plt45.svg")); // pawn
+  view->setPiece('K', QIcon(":/pieces/Chess_klt45.svg")); // king
+  view->setPiece('D', QIcon(":/pieces/Chess_qlt45.svg")); // queen
+  view->setPiece('V', QIcon(":/pieces/Chess_rlt45.svg")); // rook
+  view->setPiece('J', QIcon(":/pieces/Chess_nlt45.svg")); // knight
+  view->setPiece('S', QIcon(":/pieces/Chess_blt45.svg")); // bishop
 
-  logic->get_piece(QPoint(0,0)); //тура + 0
-  logic->put_piece(QPoint(7,0));
+  view->setPiece('p', QIcon(":/pieces/Chess_pdt45.svg")); // pawn
+  view->setPiece('k', QIcon(":/pieces/Chess_kdt45.svg")); // king
+  view->setPiece('d', QIcon(":/pieces/Chess_qdt45.svg")); // queen
+  view->setPiece('v', QIcon(":/pieces/Chess_rdt45.svg")); // rook
+  view->setPiece('j', QIcon(":/pieces/Chess_ndt45.svg")); // knight
+  view->setPiece('s', QIcon(":/pieces/Chess_bdt45.svg")); // bishop
 
-  logic->change_player();
-  logic->get_piece(QPoint(7,7)); //тура - 0
-  logic->put_piece(QPoint(0,7));
-
-  logic->get_piece(QPoint(7,7)); //тура 0 -
-  logic->put_piece(QPoint(7,0));
-
-  logic->change_player();
-  logic->get_piece(QPoint(2,0)); //офицер + +
-  logic->put_piece(QPoint(7,5));
-
-  logic->get_piece(QPoint(2,0)); //офицер - +
-  logic->put_piece(QPoint(0,2));
-
-  logic->change_player();
-  logic->get_piece(QPoint(2,7)); //офицер - -
-  logic->put_piece(QPoint(0,5));
-
-  logic->get_piece(QPoint(2,7)); //офицер - +
-  logic->put_piece(QPoint(7,2));
-
-
-  exit (0);
+  setCentralWidget(view);
+  view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  view->setFieldSize(QSize(50,50));
+  layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 ChessApp::~ChessApp()

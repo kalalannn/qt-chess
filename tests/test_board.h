@@ -4,18 +4,18 @@
 #include <QtTest/QtTest>
 #include <QString>
 #include <chess_board.h>
+#include <chess_logic.h>
 
 class TestBoard : public QObject {
   Q_OBJECT
 
 private slots:
-  void initTestCase();
-  void testInit();
-  void testNewBoard();
-  void cleanupTestCase();
+  void init();
+  void test_direction_offset();
 
 private:
-  QPointer<ChessBoard> test_b;
+  ChessLogic     *logic;
+  ChessBoard     *board;
 };
 
 #endif // TESTBOARD_H

@@ -24,23 +24,24 @@ class ChessBoard : public QObject {
 public:
   explicit ChessBoard(QObject *parent = nullptr);
 
-  //! Getter
+  //--------GET_METHODS--------//
   QVector<QChar> board() { return m_board; }
-
-  //! Create a new board and set default figures
-  void new_board();
+  QChar piece(int index) { return m_board[index]; }
 
   //! Map function for QVector [0-7][0-7]
   static int index(QPoint coordinates){ return (coordinates.y() * SIZE) + coordinates.x(); }
 
+  //--------LOGIC--------------//
+  //! Create a new board and set default figures
+  void new_board();
+
   //! Get/Move char from index/to index
-  QChar piece(int index) { return m_board[index]; }
   void move(int index_from, int index_to);
 
+  //--------DEBUG--------------//
   //! Print a state of a board
   void print();
 
-  //---------NOT_IMPLEMENTED-------------//
 
 private:
 	QVector <QChar> m_board;
