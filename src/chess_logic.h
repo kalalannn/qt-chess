@@ -23,16 +23,18 @@ public:
 	                    QPointer <ChessBoard> board = nullptr);
 
   //--------SET_METHODS--------//
-  void set_board (QPointer <ChessBoard> board) { m_board = board ;     }
-  void set_hand (QPoint coordinates)           { m_hand = coordinates; }
-  void set_player (bool player)                { m_player = player; }
-  void change_player()                         { m_player = not m_player; }
+  void setBoard (QPointer <ChessBoard> board) { m_board = board ;     }
+  void setHand (QPoint coordinates)           { m_hand = coordinates; }
+  void setPlayer (bool player)                { m_player = player; }
+  void changePlayer()                         { m_player = not m_player; }
+  void setKing(bool color, QPoint coordinate);
 
   //--------GET_METHODS--------//
   QPointer <ChessBoard> board()   { return m_board; }
   QChar piece(QPoint coordinates) { return m_board->piece(ChessBoard::index(coordinates)); }
   QPoint hand()                   { return m_hand; }
   bool player()                   { return m_player; }
+  QPoint king(bool color);
 
   //--------DEBUG--------------//
 
@@ -60,6 +62,7 @@ private:
 	QPointer <ChessBoard> m_board;
 	QPoint                m_hand;
 	bool                  m_player;
+	QPair <QPoint,QPoint> m_kings;
 };
 
 #endif // CHESS_LOGIC_H

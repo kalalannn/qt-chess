@@ -2,11 +2,28 @@
 
 ChessLogic::ChessLogic(QObject *parent,
                        QPointer <ChessBoard> board) : QObject (parent) {
-  this->set_board(board);
-  this->set_hand(QPoint(-1,-1));
-  this->set_player(WHITE);
+  this->setBoard(board);
+  this->setHand(QPoint(-1,-1));
+  this->setPlayer(WHITE);
+  this->setKing(WHITE, QPoint(0,4));
+  this->setKing(BLACK, QPoint(7,4));
 }
 
+void ChessLogic::setKing(bool color, QPoint coordinate) {
+  if(color == WHITE) {
+    m_kings.first=coordinate;
+  } else {
+    m_kings.second = coordinate;
+  }
+}
+
+QPoint ChessLogic::king(bool color) {
+  if (color == WHITE) {
+    return m_kings.first;
+  } else {
+    return m_kings.second;
+  }
+}
 //------DEVEL
 
 
@@ -119,7 +136,7 @@ bool ChessLogic::getPiece(QPoint from) {
   else if (this->player() == BLACK and this->piece(from).isUpper()) { }
   else { return false; }
 
-  this->set_hand(from);
+  this->setHand(from);
   return true;
 }
 
@@ -129,7 +146,10 @@ bool ChessLogic::putPiece(QPoint to) {
   if (not this->checkFinalCell(to)) { return false; }
 
   this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(to));
-  this->change_player();
+
+  //if (isCellOnAttack(this->))
+
+  this->changePlayer();
 
   return true;
 }

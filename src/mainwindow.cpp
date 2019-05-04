@@ -50,6 +50,6 @@ void ChessApp::viewClicked(const QPoint &field) {
     view->removeHighlight(m_selectedField);
     delete m_selectedField;
     m_selectedField = nullptr;
-    logic->set_hand(QPoint(-1,-1));
+    logic->setHand(QPoint(-1,-1));
   }
 }
