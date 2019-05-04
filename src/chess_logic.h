@@ -11,11 +11,8 @@
 #define WHITE true
 #define BLACK false
 
-#define BAD_OFFSET 10
-
 #define STRAIGHT 1
 #define DIAGONAL 2
-#define G 3
 
 //! Chess Logic
 class ChessLogic : public QObject {
@@ -42,19 +39,21 @@ public:
   //--------LOGIC--------------//
 
   //---------TESTING-----------//
-
-
+  static QVector <QPoint> getKnightCells(QPoint coordinate);
+  static QVector <QPoint> getStraightCells(QPoint coordinate);
+  static QVector <QPoint> getDiagonalCells(QPoint coordinate);
+  static QVector <QPoint> getAllCells(QPoint coordinate);
+  bool isCellOnAttack(QPoint coordinate);
+  bool checkCellsToCoordinate(QPoint from, int offset_x, int offset_y, int direction);
+  bool canMove(QPoint from, QPoint to);
   //---------DEVEL-------------//
 
-  bool check_moving_rules(QPoint offset, QChar piece);
 
-  bool check_cell(QPoint coordinate);
-  bool check_final_cell(QPoint to);
+  bool checkFinalCell(QPoint to);
 
-  bool check_figure_direction(int direction);
 
-  bool get_piece(QPoint coordinate);
-  bool put_piece(QPoint coordinate);
+  bool getPiece(QPoint coordinate);
+  bool putPiece(QPoint coordinate);
 
 
 private:

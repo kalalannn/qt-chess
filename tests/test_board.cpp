@@ -25,30 +25,8 @@ void TestBoard::init() {
 /*
  * check if initialization was good
  */
-void TestBoard::test_direction_offset() {
-  logic->set_hand(QPoint(0,0)); //тура 0 +
-  logic->get_direction_offset(QPoint(0,7));
-
-  logic->set_hand(QPoint(0,0)); //тура + 0
-  logic->get_direction_offset(QPoint(7,0));
-
-  logic->set_hand(QPoint(7,7)); //тура - 0
-  logic->get_direction_offset(QPoint(0,7));
-
-  logic->set_hand(QPoint(7,7)); //тура 0 -
-  logic->get_direction_offset(QPoint(7,0));
-
-  logic->set_hand(QPoint(2,0)); //офицер + +
-  logic->get_direction_offset(QPoint(7,5));
-
-  logic->set_hand(QPoint(2,0)); //офицер - +
-  logic->get_direction_offset(QPoint(0,2));
-
-  logic->set_hand(QPoint(2,7)); //офицер - -
-  logic->get_direction_offset(QPoint(0,5));
-
-  logic->set_hand(QPoint(2,7)); //офицер - +
-  logic->get_direction_offset(QPoint(7,2));
+void TestBoard::test_cells() {
+    logic->is_cell_on_attack(QPoint(3,4));
 }
 
 QTEST_MAIN(TestBoard);

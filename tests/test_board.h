@@ -11,7 +11,7 @@ class TestBoard : public QObject {
 
 private slots:
   void init();
-  void test_direction_offset();
+  void test_cells();
 
 private:
   ChessLogic     *logic;

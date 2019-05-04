@@ -10,55 +10,113 @@ ChessLogic::ChessLogic(QObject *parent,
 //------DEVEL
 
 
-//! check может ли фигура в руке ходить, куда ее послали
-bool ChessLogic::check_moving_rules(QPoint offset, QChar piece) {
-    if (offset.x() == 0 or offset.y() == 0) {   //Straight
-      switch (piece.unicode()) {
-        case QUEEN: case ROOK:  return true;
+bool ChessLogic::checkCellsToCoordinate(QPoint from, int offset_x, int offset_y, int direction) {
+  if (direction == STRAIGHT) {
+    if (offset_x == 0) {
+      if (offset_y > 0) {
+        for(int i=1; i < abs(offset_y) ;i++) {
+          if (not this->piece(QPoint(from.x(), from.y()+i)).isNull())  { return false; }
+        }
+      } else if (offset_y < 0) {
+        for(int i=1; i < abs(offset_y) ;i++) {
+          if (not this->piece(QPoint(from.x(), from.y()-i)).isNull())  { return false; }
+        }
+      }
+    } else if (offset_y == 0) {
+      if (offset_x > 0) {
+        for(int i=1; i < abs(offset_x) ;i++) {
+          if (not this->piece(QPoint(from.x()+i, from.y())).isNull())  { return false; }
+        }
+      } else if (offset_x < 0) {
+        for(int i=1; i < abs(offset_x) ;i++) {
+          if (not this->piece(QPoint(from.x()-i, from.y())).isNull())  { return false; }
+        }
+      }
+    }
+  } else if (direction == DIAGONAL) {
+    if (offset_x > 0 and offset_y > 0) { // -> вверх
+      for (int i=1; i<abs(offset_x) ;i++) {
+        if (not this->piece(QPoint(from.x()+i, from.y()+i)).isNull())  { return false; }
+      }
+    } else if (offset_x > 0 and offset_y < 0) { // -> вниз
+      for (int i=1; i<abs(offset_x) ;i++) {
+        if (not this->piece(QPoint(from.x()+i, from.y()-i)).isNull())  { return false; }
+      }
+    } else if (offset_x < 0 and offset_y > 0) { // <- вверх
+      for (int i=1; i<abs(offset_x) ;i++) {
+        if (not this->piece(QPoint(from.x()-i, from.y()+i)).isNull())  { return false; }
+      }
+    } else if (offset_x < 0 and offset_y < 0) { // <- вниз
+      for (int i=1; i<abs(offset_x) ;i++) {
+        if (not this->piece(QPoint(from.x()-i, from.y()-i)).isNull())  { return false; }
+      }
+    }
+  }
+  return true;
+}
+
+bool ChessLogic::canMove(QPoint from, QPoint to) {
+  int offset_x = to.x() - from.x();
+  int offset_y = to.y() - from.y();
+  if (offset_x == 0 or offset_y == 0) {   //Straight
+    switch (this->piece(from).toLower().unicode()) {
+        case QUEEN: case ROOK:
+          if (not this->checkCellsToCoordinate(from, offset_x, offset_y, STRAIGHT)) { return false; }
+          return true;
 
         case PAWN:
-          if (offset.x() != 0) { return false; }
-
-          if (abs(offset.y()) == 1) { }
-          else if (abs(offset.y()) == 2 and
-                  (this->hand().y() == 1 or this->hand().y() == 6)) { }
+          if ((this->piece(from).isUpper() and offset_y > 0) or
+              (this->piece(from).isLower() and offset_y < 0)) { return false; } // ход назад
+          if (offset_x != 0) { return false; } // ход вбок
+          else if (abs(offset_y) == 1) {
+            if (not this->piece(to).isNull()) { return false; } //стоит фигура
+          } else if (abs(offset_y) == 2) {
+            if (not (from.y() == 1 or from.y() == 6)) { return false; } // не может ходить на 2 кл
+            if (not this->checkCellsToCoordinate(from, offset_x, offset_y, STRAIGHT)) { return false; }
+            if (not this->piece(to).isNull()) { return false; } //стоит фигура
+          }
           else { return false; }
           return true;
 
         case KING:
-          if (abs(offset.x()) == 1 or abs(offset.y()) == 1) { }
+          if (not (abs(offset_x) == 1 or abs(offset_y) == 1)) { return false; }
+          return true;
+
+        default:  return false;
+      }
+  } else if (abs(offset_x) == abs(offset_y)) {  //DIAGONAL;
+      switch (this->piece(from).toLower().unicode()) {
+        case QUEEN: case OFFICER:
+          if (not this->checkCellsToCoordinate(from, offset_x, offset_y, DIAGONAL)) { return false; }
+          return true;
+
+        case KING:
+          if (not (abs(offset_x) == 1 and abs(offset_y) == 1)) { return false; }
+          return true;
+        case PAWN:
+          if (abs(offset_x) == 1 and abs(offset_y) == 1) {
+            // атака пешки
+            if (this->piece(QPoint(from.x()+offset_x, from.y()+offset_y)).isNull()) { return false; }
+          }
           else { return false; }
           return true;
 
         default:  return false;
       }
     }
-    else if (abs(offset.x()) == abs(offset.y())) {  //DIAGONAL;
-      switch (piece.unicode()) {
-        case QUEEN: case OFFICER:  return true;
-
-        case KING: case PAWN:
-          if (abs(offset.x()) == 1 and abs(offset.y()) == 1) { return true; }
-          else { return false; }
-
-        default:  return false;
-      }
-    }
-    else if ((abs(offset.x()) == 2 and abs(offset.y()) == 1) or
-             (abs(offset.x()) == 1 and abs(offset.y()) == 2)) {  // G
-      switch (piece.unicode()) {
-        case KNIGHT:  return true;
-        default:      return false;
-      }
+    else if ((abs(offset_x) == 2 and abs(offset_y) == 1) or
+             (abs(offset_x) == 1 and abs(offset_y) == 2))
+    {
+      if (this->piece(from).toLower().unicode() == KNIGHT) { return true; }
+      else { return false; }
     }
     else { return false; }
 }
 
 //! взять piece в руку
-bool ChessLogic::get_piece(QPoint from) {
-  QChar piece = this->piece(from);
-  if (this->player() == WHITE      and piece.isLower()) { }
-  else if (this->player() == BLACK and piece.isUpper()) { }
+bool ChessLogic::getPiece(QPoint from) {
+  if (this->player()      == WHITE and this->piece(from).isLower()) { }
+  else if (this->player() == BLACK and this->piece(from).isUpper()) { }
   else { return false; }
 
   this->set_hand(from);
@@ -66,92 +124,93 @@ bool ChessLogic::get_piece(QPoint from) {
 }
 
 //! походить piecom из руки
-bool ChessLogic::put_piece(QPoint to) {
-  QPoint from = this->hand();
-  if (from == to) { return false; }
-  QChar piece = this->piece(from);
-  QPoint offset = QPoint(to.x() - from.x(), to.y() - from.y());
-  bool res = false;
+bool ChessLogic::putPiece(QPoint to) {
+  if (not this->canMove(this->hand(), to)) { return false; }
+  if (not this->checkFinalCell(to)) { return false; }
 
-  if (not this->check_moving_rules(offset, piece.toLower())) { return false; }
-  if (piece.toLower() != KNIGHT and piece.toLower() != PAWN) {
-    if (offset.x() == 0) { // STRAIGHT
-      for (int inc = 1; inc != abs(offset.y()) + 1; inc++) {
-        if (inc == abs(offset.y())) {
-          res = check_final_cell(to);
-        } else if (offset.y() < 0) {
-          res = check_cell(QPoint(from.x(), from.y() - inc));
-        } else {
-          res = check_cell(QPoint(from.x(), from.y() + inc));
-        }
-        if (not res) { return res; }
-      }
-    } else if (offset.y() == 0) {
-      for (int inc = 1; inc != abs(offset.x()) + 1; inc++) {
-        if (inc == abs(offset.x())) {
-          res = check_final_cell(to);
-        } else if (offset.x() < 0) {
-          res = check_cell(QPoint(from.x() - inc, from.y()));
-        } else {
-          res = check_cell(QPoint(from.x() + inc , from.y()));
-        }
-        if (not res) { return res; }
-      }
-    } else { // DIAGONAL
-      for (int inc = 1; inc != abs(offset.x()) + 1; inc++) {
-        if (inc == abs(offset.x())) {
-          res = check_final_cell(to);
-        } else if (offset.x() < 0 and offset.y() < 0) {
-          res = check_cell(QPoint(from.x() - inc, from.y() - inc));
-        } else if (offset.x() > 0 and offset.y() > 0){
-          res = check_cell(QPoint(from.x() + inc , from.y() + inc));
-        } else if (offset.x() > 0 and offset.y() < 0) {
-          res = check_cell(QPoint(from.x() + inc , from.y() - inc));
-        } else if (offset.x() < 0 and offset.y() > 0) {
-          res = check_cell(QPoint(from.x() - inc , from.y() + inc));
-        }
-        if (not res) { return res; }
-      }
-    }
-  } else if (piece.toLower() == KNIGHT) {
-    if (check_final_cell(to) == false) { return false; } // KNIGHT
-  } else if (piece.toLower() == PAWN) {
-    if (piece.isLower()) { //white
-      if (offset.y() < 0) { return false; }
-    } else { // Black
-      if (offset.y() > 0) { return false; }
-    }
-
-    if (abs(offset.x()) == abs(offset.y())) { //diag
-      if (this->player() == WHITE) {
-        if (this->piece(to).isUpper()) { }
-        else  { return false; }
-      } else if (this->player() == BLACK) {
-        if (this->piece(to).isLower()) { }
-        else { return false; }
-      }
-    } else if (offset.y() == -2) { // black
-      if (not check_cell(QPoint(from.x(), from.y() - 1))) { return false; }
-      if (not check_cell(to)) { return false; }
-    } else if (offset.y() == 2) {
-      if (not check_cell(QPoint(from.x(), from.y() + 1))) { return false; }
-      if (not check_cell(to)) { return false; }
-    }
-  }
-  this->board()->move(ChessBoard::index(from), ChessBoard::index(to));
+  this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(to));
   this->change_player();
 
   return true;
 }
 
-//! проверит клетку (для всеx кроме коня)
-bool ChessLogic::check_cell(QPoint coordinate) {
-  if (this->piece(coordinate) == QChar::Null) {  }
-  else { return false; }
-  return true;
+QVector <QPoint> ChessLogic::getKnightCells(QPoint coordinate) {
+    QVector <QPoint> temp = QVector <QPoint> ();
+    QVector <QPoint> ret = QVector <QPoint> ();
+    temp.append(QPoint(coordinate.x() + 2, coordinate.y() + 1));
+    temp.append(QPoint(coordinate.x() + 2, coordinate.y() - 1));
+    temp.append(QPoint(coordinate.x() - 2, coordinate.y() + 1));
+    temp.append(QPoint(coordinate.x() - 2, coordinate.y() - 1));
+
+    temp.append(QPoint(coordinate.x() + 1, coordinate.y() + 2));
+    temp.append(QPoint(coordinate.x() + 1, coordinate.y() - 2));
+    temp.append(QPoint(coordinate.x() - 1, coordinate.y() + 2));
+    temp.append(QPoint(coordinate.x() - 1, coordinate.y() - 2));
+    for (QPoint coord : temp) {
+        if (coord.x() >= 0 and coord.x() <= 7 and coord.y() >= 0 and coord.y() <= 7) {
+            ret.append(coord);
+        }
+    }
+    return ret;
 }
 
-bool ChessLogic::check_final_cell (QPoint to) {
+QVector <QPoint> ChessLogic::getStraightCells(QPoint coordinate) {
+    QVector <QPoint> ret = QVector <QPoint> ();
+    for (int x=1; coordinate.x()+x <= 7; x++) { //вправо
+        ret.append(QPoint(coordinate.x()+x, coordinate.y()));
+    }
+    for (int x=1; coordinate.x()-x >= 0; x++) { //влево
+        ret.append(QPoint(coordinate.x()-x, coordinate.y()));
+    }
+    for (int y=1; coordinate.y()+y <= 7; y++) { //вверх
+        ret.append(QPoint(coordinate.x(), coordinate.y()+y));
+    }
+    for (int y=1; coordinate.y()-y >= 0; y++) { //вниз
+        ret.append(QPoint(coordinate.x(), coordinate.y()-y));
+    }
+    return ret;
+}
+
+QVector <QPoint> ChessLogic::getDiagonalCells(QPoint coordinate) {
+    QVector <QPoint> ret = QVector <QPoint> ();
+    for (int offset=1; coordinate.x()+offset <= 7 and coordinate.y()+offset <= 7;offset++) { //вв право
+        ret.append(QPoint(coordinate.x()+offset,coordinate.y()+offset));
+    }
+    for (int offset=1; coordinate.x()-offset >= 0 and coordinate.y()+offset <= 7;offset++) { //вв лево
+        ret.append(QPoint(coordinate.x()-offset,coordinate.y()+offset));
+    }
+    for (int offset=1; coordinate.x()+offset <= 7 and coordinate.y()-offset >= 0;offset++) { //вн право
+        ret.append(QPoint(coordinate.x()+offset,coordinate.y()-offset));
+    }
+    for (int offset=1; coordinate.x()-offset >= 0 and coordinate.y()-offset >= 0;offset++) { //вн лево
+        ret.append(QPoint(coordinate.x()-offset,coordinate.y()-offset));
+    }
+    return ret;
+}
+
+QVector <QPoint> ChessLogic::getAllCells(QPoint coordinate) {
+    QVector <QPoint> all = QVector <QPoint> ();
+    for (QPoint x: ChessLogic::getKnightCells(coordinate)) {
+        all.append(x);
+    }
+    for (QPoint x: ChessLogic::getStraightCells(coordinate)) {
+        all.append(x);
+    }
+    for (QPoint x: ChessLogic::getDiagonalCells(coordinate)) {
+        all.append(x);
+    }
+    return all;
+}
+
+bool ChessLogic::isCellOnAttack(QPoint coordinate) {
+    QVector <QPoint> all = ChessLogic::getAllCells(coordinate);
+    for (auto x: all) {
+        std::cout << "x: " << x.x() << " y: " << x.y() << std::endl;
+    }
+    return true;
+}
+
+bool ChessLogic::checkFinalCell (QPoint to) {
   if (this->player() == WHITE and
       (this->piece(to) == QChar::Null or this->piece(to).isUpper())) { }
   else if (this->player() == BLACK and

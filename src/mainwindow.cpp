@@ -40,13 +40,13 @@ ChessApp::~ChessApp()
 
 void ChessApp::viewClicked(const QPoint &field) {
   if (logic->hand() == QPoint(-1,-1)) {
-    if (logic->get_piece(field)) {
+    if (logic->getPiece(field)) {
       m_selectedField = new ChessView::FieldHighlight(
                   field.x(), field.y(), QColor(0, 30, 255, 50));
       view->addHighlight(m_selectedField);
     }
   } else {
-    logic->put_piece(field);
+    logic->putPiece(field);
     view->removeHighlight(m_selectedField);
     delete m_selectedField;
     m_selectedField = nullptr;
