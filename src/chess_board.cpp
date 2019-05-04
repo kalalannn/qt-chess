@@ -22,6 +22,10 @@ void ChessBoard::move(int index_from, int index_to) {
   m_board[index_from] = QChar::Null;
 }
 
+void ChessBoard::setCell(int index, QChar piece) {
+  m_board[index] = piece;
+}
+
 void ChessBoard::print() {
   int ind = 0;
   for (QChar x : m_board) {

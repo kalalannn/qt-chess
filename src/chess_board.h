@@ -28,6 +28,8 @@ public:
   QVector<QChar> board() { return m_board; }
   QChar piece(int index) { return m_board[index]; }
 
+  void setCell(int index, QChar piece);
+
   //! Map function for QVector [0-7][0-7]
   static int index(QPoint coordinates){ return (coordinates.y() * SIZE) + coordinates.x(); }
 
