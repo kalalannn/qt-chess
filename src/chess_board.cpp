@@ -1,4 +1,5 @@
 #include "chess_board.h"
+#include "chess_logic.h"
 
 ChessBoard::ChessBoard(QObject *parent) : QObject (parent) {
   this->new_board();
@@ -26,9 +27,20 @@ void ChessBoard::setCell(int index, QChar piece) {
   m_board[index] = piece;
 }
 
-void ChessBoard::print() {
-  int ind = 0;
-  for (QChar x : m_board) {
-    std::cout << "ind : " << ind++ << ", x :'" << x.toLatin1() << "'" << std::endl;
+QVector <QPoint> ChessBoard::getActualPieces(int color) {
+  QVector <QPoint> coordinates;
+  if (color == WHITE) {
+    for (int i = 0; i < 64 ;i++) {
+      if (m_board[i].isLower()) {
+        coordinates.append(this->coord(i));
+      }
+    }
+  } else {
+    for (int i = 0; i < 64 ;i++) {
+      if (m_board[i].isUpper()) {
+        coordinates.append(this->coord(i));
+      }
+    }
   }
+  return coordinates;
 }

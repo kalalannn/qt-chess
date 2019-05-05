@@ -26,7 +26,16 @@ void TestBoard::init() {
  * check if initialization was good
  */
 void TestBoard::test_cells() {
-    logic->is_cell_on_attack(QPoint(3,4));
+  for (QPoint x: board->getActualPieces(WHITE)) {
+     std::cout << x.x() << ", " << x.y() << std::endl;
+  }
+  for (QPoint x: board->getActualPieces(BLACK)) {
+     std::cout << x.x() << ", " << x.y() << std::endl;
+  }
+  for (QPoint x: logic->getKingCells(QPoint(4,0))) {
+     std::cout << x.x() << ", " << x.y() << std::endl;
+  }
+
 }
 
 QTEST_MAIN(TestBoard);

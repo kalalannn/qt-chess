@@ -219,11 +219,11 @@ bool ChessLogic::putPiece(QPoint to) {
     this->setKingWasMoved(this->player(), true);
   }
 
-  /*if (isCellOnAttack(this->king(not this->player()))) { // шах
-    if (isMat(this->player(), this->king(not this->player()))) {
-
+  if (not cellAttackers(not this->player(), this->king(not this->player())).isEmpty()) { // шах
+    if (isMat(not this->player(), this->king(not this->player()))) {
+      std::cout << "MAT" << std::endl;
     }
-  }*/
+  }
 
 
   this->changePlayer();
@@ -299,6 +299,28 @@ QVector <QPoint> ChessLogic::getAllCells(QPoint coordinate) {
     return all;
 }
 
+QVector <QPoint>  ChessLogic::getKingCells(QPoint coordinate) {
+  QVector <QPoint>  temp = QVector <QPoint> ();
+  QVector <QPoint>  result = QVector <QPoint> ();
+  temp.append(QPoint(coordinate.x()+1,coordinate.y()));
+  temp.append(QPoint(coordinate.x(),coordinate.y()+1));
+  temp.append(QPoint(coordinate.x()+1,coordinate.y()+1));
+
+  temp.append(QPoint(coordinate.x()-1,coordinate.y()));
+  temp.append(QPoint(coordinate.x(),coordinate.y()-1));
+  temp.append(QPoint(coordinate.x()-1,coordinate.y()-1));
+
+  temp.append(QPoint(coordinate.x()+1,coordinate.y()-1));
+  temp.append(QPoint(coordinate.x()-1,coordinate.y()+1));
+
+  for (auto x: temp) {
+    if (x.x() >= 0 and x.x() <=7 and x.y() >=0 and x.y() <=7) {
+      result.append(x);
+    }
+  }
+  return result;
+}
+
 QVector <QPoint> ChessLogic::cellAttackers(int color, QPoint cell) {
   QVector <QPoint> all = ChessLogic::getAllCells(cell);
   QChar piece;
@@ -319,7 +341,12 @@ QVector <QPoint> ChessLogic::cellAttackers(int color, QPoint cell) {
 }
 
 bool ChessLogic::isMat(int color, QPoint cell) {
+  for (auto coordinate: this->getKingCells(cell)) {
+    if (this->tryMove(cell, coordinate)) { return false; }
+  }
 
+  return true;
+  //return false;
 }
 
 bool ChessLogic::checkFinalCell (QPoint from, QPoint to) {

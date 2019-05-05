@@ -48,6 +48,7 @@ public:
   static QVector <QPoint> getStraightCells(QPoint coordinate);
   static QVector <QPoint> getDiagonalCells(QPoint coordinate);
   static QVector <QPoint> getAllCells(QPoint coordinate);
+  static QVector <QPoint> getKingCells(QPoint coordinate);
   QVector <QPoint> cellAttackers(int color, QPoint cell);
   bool isMat(int color, QPoint cell);
   bool checkCellsToCoordinate(QPoint from, int offset_x, int offset_y, int direction);

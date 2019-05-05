@@ -32,6 +32,7 @@ public:
 
   //! Map function for QVector [0-7][0-7]
   static int index(QPoint coordinates){ return (coordinates.y() * SIZE) + coordinates.x(); }
+  static QPoint coord (int index) { return QPoint(index % SIZE, index/SIZE); }
 
   //--------LOGIC--------------//
   //! Create a new board and set default figures
@@ -41,9 +42,7 @@ public:
   void move(int index_from, int index_to);
 
   //--------DEBUG--------------//
-  //! Print a state of a board
-  void print();
-
+  QVector <QPoint> getActualPieces(int color);
 
 private:
 	QVector <QChar> m_board;
