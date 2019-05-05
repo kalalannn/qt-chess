@@ -11,6 +11,20 @@ ChessLogic::ChessLogic(QObject *parent,
   this->setKingWasMoved(BLACK, false);
 }
 
+
+void ChessLogic::Debug() {
+  std::cout << "Hand:  x: " << this->hand().x() << ", y: " << this->hand().y() << std::endl;
+  std::cout << "WhiteK: x: " << this->king(WHITE).x() << ", y: " << this->king(WHITE).y() << std::endl;
+  for (auto x: this->cellAttackers(WHITE, this->king(WHITE))) {
+    std::cout << "WAttacker:  x: " << x.x() << ", y: " << x.y() << std::endl;
+  }
+  std::cout << "BlackK: x: " << this->king(BLACK).x() << ", y: " << this->king(BLACK).y() << std::endl;
+  for (auto x: this->cellAttackers(BLACK, this->king(BLACK))) {
+    std::cout << "BAttacker:  x: " << x.x() << ", y: " << x.y() << std::endl;
+  }
+  std::cout << "========================================" << std::endl;
+
+}
 void ChessLogic::setKing(bool color, QPoint coordinate) {
   if(color == WHITE) {
     m_kings.first=coordinate;
@@ -174,39 +188,31 @@ bool ChessLogic::getPiece(QPoint from) {
 }
 
 bool ChessLogic::tryMove(QPoint from, QPoint to) {
-  QChar was_on_to = this->piece(to);
+  const QChar was_on_to = this->piece(to);
 
   if (this->piece(from).toLower().unicode() == KING) {
-    if (from.x() == 4) { // rokirovka
-      if (to.x() == 0) {
+    if (not this->kingWasMoved(this->player())) { // rokirovka
+      if (to.x() == 0 or to.x() == 7) {
         if (cellAttackers(this->player(), this->king(this->player())).isEmpty()) {
-          this->board()->move(ChessBoard::index(from), ChessBoard::index(QPoint(2,from.y())));
-          this->board()->move(ChessBoard::index(QPoint(0,from.y())), ChessBoard::index(QPoint(3,from.y())));
-          return true;
-        } else { return false; }
-      } else if (to.x() == 7) {
-        if (cellAttackers(this->player(), this->king(this->player())).isEmpty()) {
-          this->board()->move(ChessBoard::index(from), ChessBoard::index(QPoint(6,from.y())));
-          this->board()->move(ChessBoard::index(QPoint(7,from.y())), ChessBoard::index(QPoint(5,from.y())));
           return true;
         } else { return false; }
       }
     }
-
     this->setKing(this->player(), to);
   }
 
+  // эммитация хода, проверка будет ли после хода шах
   this->board()->move(ChessBoard::index(from), ChessBoard::index(to));
+  bool retval = cellAttackers(this->player(), this->king(this->player())).isEmpty();
+  // шаг обратно
+  this->board()->move(ChessBoard::index(to), ChessBoard::index(from));
+  // возвращаем фигуру, если она там была
+  this->board()->setCell(ChessBoard::index(to), was_on_to);
 
-  if (not cellAttackers(this->player(), this->king(this->player())).isEmpty()) { // не возможно ходить из за шаха
-    this->board()->move(ChessBoard::index(to), ChessBoard::index(from));
-    this->board()->setCell(ChessBoard::index(to), was_on_to);
-    if (this->piece(from).toLower().unicode() == KING) {
-      this->setKing(this->player(), from);
-    }
-    return false;
+  if (this->piece(from).toLower().unicode() == KING) {
+    this->setKing(this->player(), from);
   }
-  return true;
+  return retval;
 }
 
 //! походить piecom из руки
@@ -214,9 +220,26 @@ bool ChessLogic::putPiece(QPoint to) {
   if (not this->canMove(this->hand(), to)) { return false; }
   if (not this->checkFinalCell(this->hand(), to)) { return false; }
 
-  if (not this->tryMove(this->hand(), to)) { return false; }
-  if (this->piece(this->hand()).toLower().unicode() == KING) {
-    this->setKingWasMoved(this->player(), true);
+  if (this->tryMove(this->hand(), to)) {
+    if (this->piece(this->hand()).toLower().unicode() == KING) {
+      if (not this->kingWasMoved(this->player()) and to.x() == 0) { // rokirovka
+          this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(QPoint(2,this->hand().y())));
+          this->board()->move(ChessBoard::index(QPoint(0,this->hand().y())), ChessBoard::index(QPoint(3,this->hand().y())));
+          this->setKing(this->player(), QPoint(2,this->hand().y()));
+      } else if (not this->kingWasMoved(this->player()) and to.x() == 7) { // rokirovka
+          this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(QPoint(6,this->hand().y())));
+          this->board()->move(ChessBoard::index(QPoint(7,this->hand().y())), ChessBoard::index(QPoint(5,this->hand().y())));
+          this->setKing(this->player(), QPoint(6,this->hand().y()));
+      } else {
+        this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(to));
+        this->setKing(this->player(), to);
+      }
+      this->setKingWasMoved(this->player(), true);
+    } else { //!KING
+      this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(to));
+    }
+  } else {
+    return false;
   }
 
   if (not cellAttackers(not this->player(), this->king(not this->player())).isEmpty()) { // шах
@@ -225,7 +248,7 @@ bool ChessLogic::putPiece(QPoint to) {
     }
   }
 
-
+  this->Debug();
   this->changePlayer();
 
   return true;

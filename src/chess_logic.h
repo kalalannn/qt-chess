@@ -31,6 +31,7 @@ public:
   void setKing(bool color, QPoint coordinate);
   void setKingWasMoved(int color, bool state);
 
+
   //--------GET_METHODS--------//
   QPointer <ChessBoard> board()   { return m_board; }
   QChar piece(QPoint coordinates) { return m_board->piece(ChessBoard::index(coordinates)); }
@@ -41,6 +42,7 @@ public:
 
   //--------DEBUG--------------//
 
+  void Debug();
   //--------LOGIC--------------//
 
   //---------TESTING-----------//
