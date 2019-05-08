@@ -37,6 +37,7 @@ public:
   QChar piece(QPoint coordinates) { return m_board->piece(ChessBoard::index(coordinates)); }
   QPoint hand()                   { return m_hand; }
   bool player()                   { return m_player; }
+  QList <QString> history()       { return m_history; }
   QPoint king(bool color);
   bool kingWasMoved(int color);
 
@@ -60,6 +61,8 @@ public:
 
 
   bool checkFinalCell(QPoint from, QPoint to);
+  void registerMove (QPair<QPoint,QChar>, QPair<QPoint,QChar>, bool sach);
+  QString transferPos(QPoint coordinate);
 
 
   bool getPiece(QPoint coordinate);
@@ -72,6 +75,7 @@ private:
 	bool                  m_player;
   QPair <QPoint,QPoint> m_kings;
   QPair <bool,bool>     m_king_was_moved;
+  QList <QString>       m_history;
 };
 
 #endif // CHESS_LOGIC_H

@@ -187,6 +187,33 @@ bool ChessLogic::getPiece(QPoint from) {
   return true;
 }
 
+QString ChessLogic::transferPos(QPoint coordinate) {
+  QString str = "";
+  str += QChar(coordinate.x() + int ('a'));
+  str += QChar(coordinate.y() + int('1'));
+  return str;
+}
+void ChessLogic::registerMove (QPair <QPoint,QChar> from, QPair <QPoint,QChar> to, bool sach) {
+  QString output = "";
+  QString fr =  this->transferPos(from.first).toLatin1().constData();
+  QString t =  this->transferPos(to.first).toLatin1().constData();
+  //QPoint another_piece = this->board()->getAnotherPiece(from.second);
+  switch (from.second.toLower().unicode()) {
+    case PAWN:
+      output += t;
+      if (to.second != QChar::Null) {
+        output += 'x';
+      }
+      break;
+  }
+  if (sach) {
+    output += '+';
+  }
+  std::cout << output.toLatin1().constData() << std::endl;
+
+
+}
+
 bool ChessLogic::tryMove(QPoint from, QPoint to) {
   const QChar was_on_to = this->piece(to);
 
@@ -217,6 +244,9 @@ bool ChessLogic::tryMove(QPoint from, QPoint to) {
 
 //! походить piecom из руки
 bool ChessLogic::putPiece(QPoint to) {
+  QPair <QPoint,QChar> was_on_from = QPair <QPoint,QChar> (this->hand(), this->piece(this->hand()));
+  QPair <QPoint,QChar> was_on_to = QPair <QPoint,QChar> (to, this->piece(to));
+  bool sach = false;
   if (not this->canMove(this->hand(), to)) { return false; }
   if (not this->checkFinalCell(this->hand(), to)) { return false; }
 
@@ -243,16 +273,19 @@ bool ChessLogic::putPiece(QPoint to) {
   }
 
   if (not cellAttackers(not this->player(), this->king(not this->player())).isEmpty()) { // шах
-    if (isMat(not this->player(), this->king(not this->player()))) {
-      std::cout << "MAT" << std::endl;
-    }
+    sach = true;
+    std::cout << "ШАХ" << std::endl;
+    /*if (isMat(not this->player(), this->king(not this->player()))) {
+    }*/
   }
 
   this->Debug();
+  //this->registerMove(was_on_from, was_on_to, sach);
   this->changePlayer();
 
   return true;
 }
+
 
 QVector <QPoint> ChessLogic::getKnightCells(QPoint coordinate) {
     QVector <QPoint> temp = QVector <QPoint> ();
@@ -369,7 +402,6 @@ bool ChessLogic::isMat(int color, QPoint cell) {
   }
 
   return true;
-  //return false;
 }
 
 bool ChessLogic::checkFinalCell (QPoint from, QPoint to) {

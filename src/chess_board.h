@@ -43,6 +43,7 @@ public:
 
   //--------DEBUG--------------//
   QVector <QPoint> getActualPieces(int color);
+  QPoint getAnotherPiece(QPoint piece);
 
 private:
 	QVector <QChar> m_board;

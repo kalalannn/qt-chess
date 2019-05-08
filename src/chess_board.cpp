@@ -27,6 +27,17 @@ void ChessBoard::setCell(int index, QChar piece) {
   m_board[index] = piece;
 }
 
+QPoint ChessBoard::getAnotherPiece(QPoint piece) {
+  QPoint ret_piece = QPoint(-1,-1);
+  QChar piece_chr = this->piece(index(piece));
+    for (int i = 0; i < 64 ;i++) {
+      if (m_board[i] == piece_chr and coord(i) != piece) {
+        return coord(i);
+      }
+    }
+    return ret_piece;
+}
+
 QVector <QPoint> ChessBoard::getActualPieces(int color) {
   QVector <QPoint> coordinates;
   if (color == WHITE) {

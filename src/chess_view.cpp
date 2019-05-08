@@ -12,7 +12,7 @@ QSize ChessView::sizeHint() const {
                             fieldSize().height() * SIZE +1);
     int rankSize =   fontMetrics().width('M')+4;
     int columnSize = fontMetrics().height()+4;
-    return boardSize + QSize(rankSize, columnSize) ;//+QSize(200, 50);
+    return boardSize + QSize(rankSize, columnSize) + QSize(200, 0);
 }
 
 QRect ChessView::fieldRect(int column, int rank) const {
