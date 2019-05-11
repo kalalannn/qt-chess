@@ -5,6 +5,7 @@
 ChessApp::ChessApp(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
   this->maxIndex = 0;
   ui->setupUi(this);
+  on_actionNew_Game_triggered();
 }
 
 ChessApp::~ChessApp() {

@@ -1,5 +1,4 @@
 #include "chess_view.h"
-
 #include <QPainter>
 
 ChessView::ChessView(QWidget *parent,

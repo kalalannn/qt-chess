@@ -52,15 +52,16 @@ public:
   static QVector <QPoint> getDiagonalCells(QPoint coordinate);
   static QVector <QPoint> getAllCells(QPoint coordinate);
   static QVector <QPoint> getKingCells(QPoint coordinate);
-  QVector <QPoint> cellAttackers(int color, QPoint cell);
-  bool isMat(int color, QPoint cell);
+  static QVector <QPoint> getCellsToCoordinate(QPoint cell, QPoint attacker);
+  QVector <QPoint> cellAttackers(bool color, QPoint cell);
+  bool isMat(bool color);
   bool checkCellsToCoordinate(QPoint from, int offset_x, int offset_y, int direction);
   bool canMove(QPoint from, QPoint to);
-  bool tryMove(QPoint from, QPoint to);
+  bool tryMove(QPoint from, QPoint to, bool color);
   //---------DEVEL-------------//
 
 
-  bool checkFinalCell(QPoint from, QPoint to);
+  bool checkFinalCell(QPoint from, QPoint to, bool color);
   void registerMove (QPair<QPoint,QChar>, QPair<QPoint,QChar>, bool sach);
   QString transferPos(QPoint coordinate);
 
