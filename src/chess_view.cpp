@@ -5,6 +5,20 @@
 ChessView::ChessView(QWidget *parent,
                      QPointer <ChessBoard> board) : QWidget (parent) {
   this->setBoard(board);
+  this->setPiece('p', QIcon(":/pieces/Chess_plt45.svg")); // pawn
+  this->setPiece('k', QIcon(":/pieces/Chess_klt45.svg")); // king
+  this->setPiece('d', QIcon(":/pieces/Chess_qlt45.svg")); // queen
+  this->setPiece('v', QIcon(":/pieces/Chess_rlt45.svg")); // rook
+  this->setPiece('j', QIcon(":/pieces/Chess_nlt45.svg")); // knight
+  this->setPiece('s', QIcon(":/pieces/Chess_blt45.svg")); // bishop
+
+  this->setPiece('P', QIcon(":/pieces/Chess_pdt45.svg")); // pawn
+  this->setPiece('K', QIcon(":/pieces/Chess_kdt45.svg")); // king
+  this->setPiece('D', QIcon(":/pieces/Chess_qdt45.svg")); // queen
+  this->setPiece('V', QIcon(":/pieces/Chess_rdt45.svg")); // rook
+  this->setPiece('J', QIcon(":/pieces/Chess_ndt45.svg")); // knight
+  this->setPiece('S', QIcon(":/pieces/Chess_bdt45.svg")); // bishop
+  this->setFieldSize(QSize(50,50));
 }
 
 QSize ChessView::sizeHint() const {

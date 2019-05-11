@@ -23,11 +23,16 @@ public:
 public slots:
     void viewClicked(const QPoint &field);
 
+private slots:
+    void on_actionNew_Game_triggered();
+
 private:
   Ui::MainWindow *ui;
-  ChessLogic     *logic;
-  ChessView      *view;
-  ChessBoard     *board;
+  QVector <ChessLogic *> v_logic;
+  QVector <ChessView *> v_view;
+  QVector <ChessBoard *> v_board;
+  int maxIndex;
+
   ChessView::FieldHighlight *m_selectedField;
 };
 
