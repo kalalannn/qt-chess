@@ -61,8 +61,8 @@ public:
 
 
   bool checkFinalCell(QPoint from, QPoint to, bool color);
-  void registerMove (QPair<QPoint,QChar>, QPair<QPoint,QChar>, bool sach);
-  QString transferPos(QPoint coordinate);
+  void registerMove (QPoint from, QPoint to, bool sach, bool mat, bool attack);
+  QPair <QChar,QChar> transferPos(QPoint coordinate);
 
 
   bool getPiece(QPoint coordinate);

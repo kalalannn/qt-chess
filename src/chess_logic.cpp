@@ -187,29 +187,52 @@ bool ChessLogic::getPiece(QPoint from) {
   return true;
 }
 
-QString ChessLogic::transferPos(QPoint coordinate) {
-  QString str = "";
-  str += QChar(coordinate.x() + int ('a'));
-  str += QChar(coordinate.y() + int('1'));
-  return str;
+QPair <QChar,QChar> ChessLogic::transferPos(QPoint coordinate) {
+  QPair <QChar,QChar> lit_num = QPair <QChar,QChar> ();
+  lit_num.first = QChar(coordinate.x() + int ('a'));
+  lit_num.second = QChar(coordinate.y() + int('1'));
+  return lit_num;
 }
 
-void ChessLogic::registerMove (QPair <QPoint,QChar> from, QPair <QPoint,QChar> to, bool sach) {
+void ChessLogic::registerMove (QPoint from, QPoint to,
+                               bool sach, bool mat, bool attack)
+{
   QString output = "";
-  QString fr =  this->transferPos(from.first).toLatin1().constData();
-  QString t =  this->transferPos(to.first).toLatin1().constData();
-  //QPoint another_piece = this->board()->getAnotherPiece(from.second);
-  switch (from.second.toLower().unicode()) {
-    case PAWN:
-      output += t;
-      if (to.second != QChar::Null) {
-        output += 'x';
-      }
-      break;
+  QPair <QChar,QChar> lit_num_from = transferPos(from);
+  QPair <QChar,QChar> lit_num_to = transferPos(to);
+
+  QChar vysl = QChar::Null;
+
+  if (piece(to).toLower().unicode() == PAWN) { }
+  else {
+    QPoint another_piece = board()->getAnotherPiece(QPair <QPoint,QChar> (to,piece(to)));
+    std::cout << "an X: " << another_piece.x() << ", Y: " << another_piece.y() << std::endl;
+    QPair <QChar,QChar> lit_num_another = transferPos(another_piece);
+    if (lit_num_from.first == lit_num_another.first) {
+      vysl = lit_num_from.second;
+    } else if (lit_num_from.second == lit_num_another.second) {
+      vysl = lit_num_from.first;
+    }
+    output += piece(to).toUpper();
   }
-  if (sach) {
+
+  if (not vysl.isNull()) {
+    output += vysl;
+  }
+
+  output += lit_num_to.first;
+  output += lit_num_to.second;
+
+  if (attack) {
+    output += 'x';
+  }
+
+  if (mat) {
+    output += '#';
+  } else if (sach) {
     output += '+';
   }
+
   std::cout << output.toLatin1().constData() << std::endl;
 
 }
@@ -244,9 +267,11 @@ bool ChessLogic::tryMove(QPoint from, QPoint to, bool color) {
 
 //! походить piecom из руки
 bool ChessLogic::putPiece(QPoint to) {
-  QPair <QPoint,QChar> was_on_from = QPair <QPoint,QChar> (this->hand(), this->piece(this->hand()));
-  QPair <QPoint,QChar> was_on_to = QPair <QPoint,QChar> (to, this->piece(to));
+  QPoint old_from = this->hand();
+  bool attack = not piece(to).isNull();
   bool sach = false;
+  bool mat = false;
+
   if (not this->canMove(this->hand(), to)) { return false; }
   if (not this->checkFinalCell(this->hand(), to, this->player())) { return false; }
 
@@ -284,12 +309,13 @@ bool ChessLogic::putPiece(QPoint to) {
     std::cout << "ШАХ" << std::endl;
     if (isMat(not this->player())) {
       std::cout << "MAT" << std::endl;
+      mat = true;
     } else {
       std::cout << "НЕ МAT" << std::endl;
     }
   }
 
-  //this->registerMove(was_on_from, was_on_to, sach);
+  this->registerMove(old_from, QPoint (to), sach, mat, attack);
   this->changePlayer();
 
   return true;

@@ -14,6 +14,7 @@
 #include <QObject>
 #include <QVector>
 #include <QPoint>
+#include <QPair>
 
 #include <iostream>
 
@@ -43,7 +44,7 @@ public:
 
   //--------DEBUG--------------//
   QVector <QPoint> getActualPieces(int color);
-  QPoint getAnotherPiece(QPoint piece);
+  QPoint getAnotherPiece(QPair <QPoint,QChar> coord_piece);
 
 private:
 	QVector <QChar> m_board;
