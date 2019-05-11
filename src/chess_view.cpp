@@ -3,8 +3,10 @@
 #include <QPainter>
 
 ChessView::ChessView(QWidget *parent,
-                     QPointer <ChessBoard> board) : QWidget (parent) {
+                     ChessBoard *board,
+                     ChessLogic *logic) : QWidget (parent) {
   this->setBoard(board);
+  this->setLogic(logic);
   this->setPiece('p', QIcon(":/pieces/Chess_plt45.svg")); // pawn
   this->setPiece('k', QIcon(":/pieces/Chess_klt45.svg")); // king
   this->setPiece('d', QIcon(":/pieces/Chess_qlt45.svg")); // queen
@@ -19,6 +21,24 @@ ChessView::ChessView(QWidget *parent,
   this->setPiece('J', QIcon(":/pieces/Chess_ndt45.svg")); // knight
   this->setPiece('S', QIcon(":/pieces/Chess_bdt45.svg")); // bishop
   this->setFieldSize(QSize(50,50));
+  connect(this, &ChessView::clicked,
+          this, &ChessView::viewClicked);
+}
+
+void ChessView::viewClicked(const QPoint &field) {
+  if (logic()->hand() == QPoint(-1,-1)) {
+    if (logic()->getPiece(field)) {
+      m_selectedField = new FieldHighlight(
+                  field.x(), field.y(), QColor(0, 30, 255, 50));
+      this->addHighlight(m_selectedField);
+    }
+  } else {
+    logic()->putPiece(field);
+    this->removeHighlight(m_selectedField);
+    delete m_selectedField;
+    m_selectedField = nullptr;
+    logic()->setHand(QPoint(-1,-1));
+  }
 }
 
 QSize ChessView::sizeHint() const {
@@ -26,7 +46,7 @@ QSize ChessView::sizeHint() const {
                             fieldSize().height() * SIZE +1);
     int rankSize =   fontMetrics().width('M')+4;
     int columnSize = fontMetrics().height()+4;
-    return boardSize + QSize(rankSize, columnSize) + QSize(200, 0);
+    return boardSize + QSize(rankSize, columnSize);
 }
 
 QRect ChessView::fieldRect(int column, int rank) const {

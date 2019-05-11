@@ -2,6 +2,7 @@
 #define CHESS_VIEW_H
 
 #include "chess_board.h"
+#include "chess_logic.h"
 
 //! QIncludes
 #include <QWidget>
@@ -38,14 +39,17 @@ public:
   };
 
   explicit ChessView(QWidget *parent = nullptr,
-                     QPointer <ChessBoard> board = nullptr);
+                     ChessBoard *board = nullptr,
+                     ChessLogic *logic = nullptr);
 
-  QPointer <ChessBoard> board() { return m_board; }
+  ChessBoard* board()           { return m_board; }
+  ChessLogic* logic()           { return m_logic; }
   QSize fieldSize() const       { return m_fieldSize; }
   QIcon piece(QChar type) const { return m_pieces.value(type, QIcon()); }
 
   //! Set/Get board
-  void setBoard(QPointer <ChessBoard> board)  { m_board = board; }
+  void setBoard(ChessBoard *board)  { m_board = board; }
+  void setLogic(ChessLogic *logic)             { m_logic = logic; }
   void setFieldSize(QSize fieldSize)          { m_fieldSize = fieldSize; updateGeometry(); }
   void setPiece(char type, const QIcon &icon) { m_pieces.insert(type, icon); update(); }
 
@@ -63,6 +67,9 @@ public:
 signals:
   void clicked(const QPoint &);
 
+public slots:
+    void viewClicked(const QPoint &field);
+
 
 protected:
   void paintEvent(QPaintEvent *event);
@@ -76,10 +83,12 @@ protected:
   //---------NOT_IMPLEMENTED-------------//
 
 private:
-  QPointer <ChessBoard> m_board;
-  QMap <QChar, QIcon>    m_pieces;
-  QSize                 m_fieldSize;
-  QList<Highlight*> m_highlights;
+  QMap <QChar, QIcon> m_pieces;
+  QSize m_fieldSize;
+  QList <Highlight*> m_highlights;
+  FieldHighlight *m_selectedField;
+  ChessBoard *m_board;
+  ChessLogic *m_logic;
 };
 
 #endif // CHESS_VIEW_H

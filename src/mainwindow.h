@@ -20,8 +20,6 @@ public:
   explicit ChessApp(QWidget *parent = nullptr);
   ~ChessApp();
 
-public slots:
-    void viewClicked(const QPoint &field);
 
 private slots:
     void on_actionNew_Game_triggered();
@@ -33,7 +31,6 @@ private:
   QVector <ChessBoard *> v_board;
   int maxIndex;
 
-  ChessView::FieldHighlight *m_selectedField;
 };
 
 #endif // MAINWINDOW_H
