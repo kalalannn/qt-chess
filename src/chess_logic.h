@@ -50,7 +50,6 @@ public:
   static QVector <QPoint> getKnightCells(QPoint coordinate);
   static QVector <QPoint> getStraightCells(QPoint coordinate);
   static QVector <QPoint> getDiagonalCells(QPoint coordinate);
-  static QVector <QPoint> getAllCells(QPoint coordinate);
   static QVector <QPoint> getKingCells(QPoint coordinate);
   static QVector <QPoint> getCellsToCoordinate(QPoint cell, QPoint attacker);
   QVector <QPoint> cellAttackers(bool color, QPoint cell);

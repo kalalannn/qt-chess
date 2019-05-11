@@ -2,13 +2,13 @@
 
 ChessLogic::ChessLogic(QObject *parent,
                        QPointer <ChessBoard> board) : QObject (parent) {
-  this->setBoard(board);
-  this->setHand(QPoint(-1,-1));
-  this->setPlayer(WHITE);
-  this->setKing(WHITE, QPoint(4,0));
-  this->setKing(BLACK, QPoint(4,7));
-  this->setKingWasMoved(WHITE, false);
-  this->setKingWasMoved(BLACK, false);
+  setBoard(board);
+  setHand(QPoint(-1,-1));
+  setPlayer(WHITE);
+  setKing(WHITE, QPoint(4,0));
+  setKing(BLACK, QPoint(4,7));
+  setKingWasMoved(WHITE, false);
+  setKingWasMoved(BLACK, false);
 }
 
 
@@ -193,6 +193,7 @@ QString ChessLogic::transferPos(QPoint coordinate) {
   str += QChar(coordinate.y() + int('1'));
   return str;
 }
+
 void ChessLogic::registerMove (QPair <QPoint,QChar> from, QPair <QPoint,QChar> to, bool sach) {
   QString output = "";
   QString fr =  this->transferPos(from.first).toLatin1().constData();
@@ -214,7 +215,7 @@ void ChessLogic::registerMove (QPair <QPoint,QChar> from, QPair <QPoint,QChar> t
 }
 
 bool ChessLogic::tryMove(QPoint from, QPoint to, bool color) {
-  const QChar was_on_to = this->piece(to);
+  QChar was_on_to = this->piece(to);
 
   if (this->piece(from).toLower().unicode() == KING) {
     if (not this->kingWasMoved(color)) { // rokirovka
@@ -266,6 +267,13 @@ bool ChessLogic::putPiece(QPoint to) {
       this->setKingWasMoved(this->player(), true);
     } else { //!KING
       this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(to));
+      if (piece(to).toLower().unicode() == PAWN) {
+        if (player() == WHITE and to.y() == 7) {
+          board()->setCell(ChessBoard::index(QPoint(to.x(), 7)), QUEEN);
+        } else if (player() == BLACK and to.y() == 0) {
+          board()->setCell(ChessBoard::index(QPoint(to.x(), 0)), QChar(QUEEN).toUpper());
+        }
+      }
     }
   } else {
     return false;
@@ -295,18 +303,34 @@ bool ChessLogic::isMat(bool color) {
       }
     }
   }
+  std::cout << "King can not move" << std::endl;
+
   QVector <QPoint> attackers = cellAttackers(color, king(color));
+
+  for (auto x: attackers) {
+    std::cout << "attacker X: " <<  x.x() << ", Y: " << x.y() << std::endl;
+    std::cout << attackers.count() << std::endl;
+  }
+
   if (attackers.count() > 1) { return true; } // если король не может ходить и обидчиков 2 и более
 
+  if (piece(attackers.last()).toLower().unicode() == KNIGHT) {
+    for (QPoint piece_coord : board()->getActualPieces(color)) { // кто то может уюить коня
+        if (tryMove(piece_coord, attackers.last(), color)) { return false; }
+    }
+    return true;
+  }
+
   for (QPoint cell : getCellsToCoordinate(king(color), attackers.last())) {
+    std::cout << "============================" << std::endl;
+    std::cout << "Checking POINT X: " <<  cell.x() << ", Y: " << cell.y() << std::endl;
     for (QPoint piece_coord : board()->getActualPieces(color)) { // кто то может заслонить собой
       if (canMove(piece_coord, cell)) {
         if (tryMove(piece_coord, cell, color)) { return false; }
       }
-      if (canMove(piece_coord, attackers.last())) { // кто то может убить обидчика
-        if (tryMove(piece_coord, attackers.last(), color)) { return false; }
-      }
+      std::cout << "Figure X: " << piece_coord.x() << ", Y: " << piece_coord.y() << " -- cannot" << std::endl;
     }
+    std::cout << "============================" << std::endl;
   }
   return true;
 }
@@ -356,6 +380,7 @@ QVector <QPoint> ChessLogic::getCellsToCoordinate(QPoint cell, QPoint attacker) 
       }
     }
   }
+  cells.append(attacker);
   return cells;
 }
 
@@ -413,20 +438,6 @@ QVector <QPoint> ChessLogic::getDiagonalCells(QPoint coordinate) {
     return ret;
 }
 
-QVector <QPoint> ChessLogic::getAllCells(QPoint coordinate) {
-    QVector <QPoint> all = QVector <QPoint> ();
-    for (QPoint x: ChessLogic::getKnightCells(coordinate)) {
-        all.append(x);
-    }
-    for (QPoint x: ChessLogic::getStraightCells(coordinate)) {
-        all.append(x);
-    }
-    for (QPoint x: ChessLogic::getDiagonalCells(coordinate)) {
-        all.append(x);
-    }
-    return all;
-}
-
 QVector <QPoint>  ChessLogic::getKingCells(QPoint coordinate) {
   QVector <QPoint>  temp = QVector <QPoint> ();
   QVector <QPoint>  result = QVector <QPoint> ();
@@ -450,10 +461,34 @@ QVector <QPoint>  ChessLogic::getKingCells(QPoint coordinate) {
 }
 
 QVector <QPoint> ChessLogic::cellAttackers(bool color, QPoint cell) {
-  QVector <QPoint> all = ChessLogic::getAllCells(cell);
-  QChar piece;
   QVector <QPoint> attackers = QVector <QPoint>();
-  for (QPoint coordinate: all) {
+  QChar piece;
+
+  for (QPoint coordinate : getStraightCells(cell)) {
+    piece = this->piece(coordinate);
+    if (color == WHITE) {
+      if (piece.isUpper()) { // черная фигура
+        if (this->canMove(coordinate, cell)) { attackers.append(coordinate); break;}
+      }
+    } else if (color == BLACK) {
+      if (piece.isLower()) {
+        if (this->canMove(coordinate, cell)) { attackers.append(coordinate); break;}
+      }
+    }
+  }
+  for (QPoint coordinate : getDiagonalCells(cell)) {
+    piece = this->piece(coordinate);
+    if (color == WHITE) {
+      if (piece.isUpper()) { // черная фигура
+        if (this->canMove(coordinate, cell)) { attackers.append(coordinate); break;}
+      }
+    } else if (color == BLACK) {
+      if (piece.isLower()) {
+        if (this->canMove(coordinate, cell)) { attackers.append(coordinate); break;}
+      }
+    }
+  }
+  for (QPoint coordinate : getKnightCells(cell)) {
     piece = this->piece(coordinate);
     if (color == WHITE) {
       if (piece.isUpper()) { // черная фигура
@@ -465,15 +500,15 @@ QVector <QPoint> ChessLogic::cellAttackers(bool color, QPoint cell) {
       }
     }
   }
+
   return attackers;
 }
 
 bool ChessLogic::checkFinalCell (QPoint from, QPoint to, bool color) {
-  //std::cout << this->piece(I).unicode() <<
   if (color == WHITE and
-      (this->piece(to) == QChar::Null or this->piece(to).isUpper())) { }
+      (this->piece(to).isNull() or this->piece(to).isUpper())) { }
   else if (color == BLACK and
-      (this->piece(to) == QChar::Null or this->piece(to).isLower())) { }
+      (this->piece(to).isNull() or this->piece(to).isLower())) { }
   else if (this->piece(from).toLower().unicode() == KING and
            this->piece(to).toLower().unicode() == ROOK)
   {
