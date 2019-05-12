@@ -178,7 +178,6 @@ bool ChessLogic::canMove(QPoint from, QPoint to) {
     else { return false; }
 }
 
-//! взять piece в руку
 bool ChessLogic::getPiece(QPoint from) {
   if (this->player()      == WHITE and this->piece(from).isLower()) { }
   else if (this->player() == BLACK and this->piece(from).isUpper()) { }
@@ -284,7 +283,6 @@ bool ChessLogic::tryMove(QPoint from, QPoint to, bool color) {
   return retval;
 }
 
-//! походить piecom из руки
 bool ChessLogic::putPiece(QPoint to) {
   QPoint old_from = this->hand();
   bool attack = not piece(to).isNull();

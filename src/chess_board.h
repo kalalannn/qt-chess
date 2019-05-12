@@ -1,16 +1,14 @@
 #ifndef CHESS_BOARD_H
 #define CHESS_BOARD_H
 
-//! Constants
-#define SIZE 8
-#define ROOK 'v'
-#define KNIGHT 'j'
-#define OFFICER 's'
-#define QUEEN 'd'
-#define KING 'k'
-#define PAWN 'p'
+#define SIZE 8          //!< Size of a board
+#define ROOK 'v'        //!< Rook value
+#define KNIGHT 'j'      //!< Knight value
+#define OFFICER 's'     //!< Officer value
+#define QUEEN 'd'       //!< Queen value
+#define KING 'k'        //!< King value
+#define PAWN 'p'        //!< Pawn value
 
-//! QIncludes
 #include <QObject>
 #include <QVector>
 #include <QPoint>
@@ -18,36 +16,81 @@
 
 #include <iostream>
 
-//! Chess Board abstraction
+/*!
+ * Chess Board abstraction
+ */
 class ChessBoard : public QObject {
   Q_OBJECT
 
 public:
   explicit ChessBoard(QObject *parent = nullptr);
-
-  //--------GET_METHODS--------//
+  /*!
+   * \brief Get board
+   * \return m_board
+   */
   QVector<QChar> board() { return m_board; }
+
+  /*!
+   * \brief Get piece from index
+   * \param index
+   * \return piece
+   */
   QChar piece(int index) { return m_board[index]; }
 
+  /*!
+   * \brief Set piece on index
+   * \param index
+   * \param piece
+   */
   void setCell(int index, QChar piece);
 
-  //! Map function for QVector [0-7][0-7]
+  //! \defgroup MappingFunctions
+  //! @{
+
+  /*!
+   * \brief Map function
+   * \param coordinates
+   * \return index on m_board
+   */
   static int index(QPoint coordinates){ return (coordinates.y() * SIZE) + coordinates.x(); }
+
+  /*!
+   * \brief Map function
+   * \param index
+   * \return coordinate
+   */
   static QPoint coord (int index) { return QPoint(index % SIZE, index/SIZE); }
 
-  //--------LOGIC--------------//
-  //! Create a new board and set default figures
+  //! @}
+
+  /*!
+  * \brief Create a new board and set default figures
+  */
   void new_board();
 
-  //! Get/Move char from index/to index
+  /*!
+   * \brief Move piece from to
+   * \param index_from index
+   * \param index_to index
+   */
   void move(int index_from, int index_to);
 
-  //--------DEBUG--------------//
+  /*!
+   * \brief Get current pieces on a board
+   * \param color Color of pieces
+   * \return Vector of pieces
+   */
   QVector <QPoint> getActualPieces(int color);
+
+  /*!
+   * \brief Get equal piece on a board
+   * \param coord_piece Coordinate and value of a piece
+   * \return Another piece
+   */
   QPoint getAnotherPiece(QPair <QPoint,QChar> coord_piece);
 
 private:
-	QVector <QChar> m_board;
+  QVector <QChar> m_board; //!< Abstraction of Board
 };
 
 #endif // CHESS_BOARD_H

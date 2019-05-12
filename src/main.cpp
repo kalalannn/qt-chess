@@ -3,6 +3,11 @@
 
 #include <QApplication>
 
+/*!
+ * \author Nikolaj Vorobiev
+ * \version 1.0
+ */
+
 int main(int argc, char *argv[]) {
   QApplication Chess(argc, argv);
   ChessApp RootWidget;
