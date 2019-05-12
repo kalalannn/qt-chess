@@ -30,6 +30,8 @@ public:
   void changePlayer()                         { m_player = not m_player; }
   void setKing(bool color, QPoint coordinate);
   void setKingWasMoved(int color, bool state);
+  void concOutput (QString conc)              { m_output += conc; }
+  void concOutput (QChar conc)                { m_output += conc; }
 
 
   //--------GET_METHODS--------//
@@ -40,6 +42,7 @@ public:
   QList <QString> history()       { return m_history; }
   QPoint king(bool color);
   bool kingWasMoved(int color);
+  QString output()                { return m_output; }
 
   //--------DEBUG--------------//
 
@@ -61,12 +64,15 @@ public:
 
 
   bool checkFinalCell(QPoint from, QPoint to, bool color);
-  void registerMove (QPoint from, QPoint to, bool sach, bool mat, bool attack);
+  void registerMove (QPoint from, QPoint to, bool sach, bool mat, bool attack, bool, bool,bool);
   QPair <QChar,QChar> transferPos(QPoint coordinate);
 
 
   bool getPiece(QPoint coordinate);
   bool putPiece(QPoint coordinate);
+
+signals:
+  void onMat(bool color);
 
 
 private:
@@ -76,6 +82,7 @@ private:
   QPair <QPoint,QPoint> m_kings;
   QPair <bool,bool>     m_king_was_moved;
   QList <QString>       m_history;
+  QString               m_output;
 };
 
 #endif // CHESS_LOGIC_H

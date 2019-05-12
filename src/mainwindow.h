@@ -7,6 +7,8 @@
 
 //! QIncludes
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QFileDialog>
 
 
 namespace Ui {
@@ -23,6 +25,16 @@ public:
 
 private slots:
     void on_actionNew_Game_triggered();
+
+    void on_actionMat(bool color);
+
+    void on_tabWidget_tabCloseRequested(int index);
+
+    void on_actionSave_Game_triggered();
+
+    void on_actionLoad_Game_triggered();
+
+    void on_actionAbout_triggered();
 
 private:
   Ui::MainWindow *ui;

@@ -9,6 +9,7 @@ ChessLogic::ChessLogic(QObject *parent,
   setKing(BLACK, QPoint(4,7));
   setKingWasMoved(WHITE, false);
   setKingWasMoved(BLACK, false);
+  m_output = "";
 }
 
 
@@ -195,9 +196,29 @@ QPair <QChar,QChar> ChessLogic::transferPos(QPoint coordinate) {
 }
 
 void ChessLogic::registerMove (QPoint from, QPoint to,
-                               bool sach, bool mat, bool attack)
+                               bool sach, bool mat, bool attack,
+                               bool rokirovka_dlouha, bool rokirovka_kratka,
+                               bool color)
 {
+  if (color == WHITE) {
+    this->concOutput(QChar::Other_Format);
+  } else if (color == BLACK) {
+    this->concOutput(QChar::Space);
+  }
   QString output = "";
+
+  if (rokirovka_dlouha) {
+    output = "0-0-0";
+    this->concOutput(output);
+    return;
+  }
+
+  if (rokirovka_kratka) {
+    output = "0-0";
+    this->concOutput(output);
+    return;
+  }
+
   QPair <QChar,QChar> lit_num_from = transferPos(from);
   QPair <QChar,QChar> lit_num_to = transferPos(to);
 
@@ -206,8 +227,8 @@ void ChessLogic::registerMove (QPoint from, QPoint to,
   if (piece(to).toLower().unicode() == PAWN) { }
   else {
     QPoint another_piece = board()->getAnotherPiece(QPair <QPoint,QChar> (to,piece(to)));
-    std::cout << "an X: " << another_piece.x() << ", Y: " << another_piece.y() << std::endl;
     QPair <QChar,QChar> lit_num_another = transferPos(another_piece);
+
     if (lit_num_from.first == lit_num_another.first) {
       vysl = lit_num_from.second;
     } else if (lit_num_from.second == lit_num_another.second) {
@@ -232,9 +253,7 @@ void ChessLogic::registerMove (QPoint from, QPoint to,
   } else if (sach) {
     output += '+';
   }
-
-  std::cout << output.toLatin1().constData() << std::endl;
-
+  this->concOutput(output);
 }
 
 bool ChessLogic::tryMove(QPoint from, QPoint to, bool color) {
@@ -271,6 +290,8 @@ bool ChessLogic::putPiece(QPoint to) {
   bool attack = not piece(to).isNull();
   bool sach = false;
   bool mat = false;
+  bool rokirovka_dlouha = false;
+  bool rokirovka_kratka = false;
 
   if (not this->canMove(this->hand(), to)) { return false; }
   if (not this->checkFinalCell(this->hand(), to, this->player())) { return false; }
@@ -281,10 +302,12 @@ bool ChessLogic::putPiece(QPoint to) {
           this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(QPoint(2,this->hand().y())));
           this->board()->move(ChessBoard::index(QPoint(0,this->hand().y())), ChessBoard::index(QPoint(3,this->hand().y())));
           this->setKing(this->player(), QPoint(2,this->hand().y()));
+        rokirovka_dlouha = true;
       } else if (not this->kingWasMoved(this->player()) and to.x() == 7) { // rokirovka
           this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(QPoint(6,this->hand().y())));
           this->board()->move(ChessBoard::index(QPoint(7,this->hand().y())), ChessBoard::index(QPoint(5,this->hand().y())));
           this->setKing(this->player(), QPoint(6,this->hand().y()));
+        rokirovka_kratka = true;
       } else {
         this->board()->move(ChessBoard::index(this->hand()), ChessBoard::index(to));
         this->setKing(this->player(), to);
@@ -306,16 +329,13 @@ bool ChessLogic::putPiece(QPoint to) {
 
   if (not cellAttackers(not this->player(), this->king(not this->player())).isEmpty()) { // шах
     sach = true;
-    std::cout << "ШАХ" << std::endl;
     if (isMat(not this->player())) {
-      std::cout << "MAT" << std::endl;
+      emit(onMat(player()));
       mat = true;
-    } else {
-      std::cout << "НЕ МAT" << std::endl;
     }
   }
 
-  this->registerMove(old_from, QPoint (to), sach, mat, attack);
+  this->registerMove(old_from, QPoint (to), sach, mat, attack, rokirovka_dlouha, rokirovka_kratka, player());
   this->changePlayer();
 
   return true;
@@ -329,14 +349,8 @@ bool ChessLogic::isMat(bool color) {
       }
     }
   }
-  std::cout << "King can not move" << std::endl;
 
   QVector <QPoint> attackers = cellAttackers(color, king(color));
-
-  for (auto x: attackers) {
-    std::cout << "attacker X: " <<  x.x() << ", Y: " << x.y() << std::endl;
-    std::cout << attackers.count() << std::endl;
-  }
 
   if (attackers.count() > 1) { return true; } // если король не может ходить и обидчиков 2 и более
 
@@ -348,15 +362,11 @@ bool ChessLogic::isMat(bool color) {
   }
 
   for (QPoint cell : getCellsToCoordinate(king(color), attackers.last())) {
-    std::cout << "============================" << std::endl;
-    std::cout << "Checking POINT X: " <<  cell.x() << ", Y: " << cell.y() << std::endl;
     for (QPoint piece_coord : board()->getActualPieces(color)) { // кто то может заслонить собой
       if (canMove(piece_coord, cell)) {
         if (tryMove(piece_coord, cell, color)) { return false; }
       }
-      std::cout << "Figure X: " << piece_coord.x() << ", Y: " << piece_coord.y() << " -- cannot" << std::endl;
     }
-    std::cout << "============================" << std::endl;
   }
   return true;
 }
